@@ -5,7 +5,7 @@ export async function GET(req, { params }) {
         const { filliere,module } = params;
         const db = await createConnection()
         // const query="SELECT DISTINCT module m FROM matieres WHERE fil=? AND (semestre='S1' OR semestre='S3' OR semestre='S5') AND module not like 'M%' order by m";
-        const query=`SELECT modules.matricule mat,name nom,moyenne mom,decision d from modules 
+        const query=`SELECT modules.matricule mat,name nom,moyenne moy_m,decision d from modules 
                     INNER JOIN etudiants 
                         ON etudiants.matricule=modules.matricule
                     WHERE module =? and modules.fil =? and semestre IN ('S1' OR 'S2' OR 'S3')`;
