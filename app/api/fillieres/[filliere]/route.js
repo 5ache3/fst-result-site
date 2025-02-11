@@ -4,7 +4,10 @@ export async function GET(req, { params }) {
     try {
         const { filliere } = params;
         const db = await createConnection()
-        const query="SELECT DISTINCT module m FROM matieres WHERE fil=? AND semestre IN(?) AND module not like 'M%' order by m";
+        const query=`SELECT S.matricule mat,E.name nom,moyenne moy FROM semestres S
+                    INNER JOIN etudiants E ON 
+                        E.matricule=S.matricule
+                    WHERE S.fil=? AND semestre IN (?) ORDER BY moy DESC`;
         const [response]= await db.query(query,[filliere,['S1','S3','S5']]);
         return NextResponse.json(response)
     }catch(error){

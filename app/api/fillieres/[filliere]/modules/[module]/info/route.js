@@ -6,10 +6,10 @@ export async function GET(req, { params }) {
         const db = await createConnection()
         // const query="SELECT DISTINCT module m FROM matieres WHERE fil=? AND (semestre='S1' OR semestre='S3' OR semestre='S5') AND module not like 'M%' order by m";
         const query=`SELECT module,avg(moyenne) moy,count(decision) cont from modules 
-                    WHERE module =? and modules.fil =? and semestre IN ('S1' OR 'S2' OR 'S3')`;
-        const [response]= await db.query(query,[module,filliere]);
+                    WHERE module =? and modules.fil =? and semestre IN (?)`;
+        const [response]= await db.query(query,[module,filliere,['S1','S3','S5']]);
         return NextResponse.json(response)
     }catch(error){
-        return NextResponse.json({error:error})
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

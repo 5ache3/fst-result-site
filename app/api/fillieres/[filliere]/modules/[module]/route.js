@@ -8,10 +8,11 @@ export async function GET(req, { params }) {
         const query=`SELECT modules.matricule mat,name nom,moyenne moy_m,decision d from modules 
                     INNER JOIN etudiants 
                         ON etudiants.matricule=modules.matricule
-                    WHERE module =? and modules.fil =? and semestre IN ('S1' OR 'S2' OR 'S3')`;
-        const [response]= await db.query(query,[module,filliere]);
+                    WHERE module =? and modules.fil =? and semestre IN (?)`;
+        const [response]= await db.query(query,[module,filliere,['S1','S3','S5']]);
         return NextResponse.json(response)
     }catch(error){
-        return NextResponse.json({error:error})
+        return NextResponse.json({ error: error.message }, { status: 500 });
+
     }
 }

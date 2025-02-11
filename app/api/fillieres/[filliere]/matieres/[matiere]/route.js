@@ -1,4 +1,4 @@
-import { createConnection } from "@lib/connection";
+import { createConnection } from "@/lib/connection";
 import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
     try {
@@ -18,6 +18,6 @@ export async function GET(req, { params }) {
         const [response]= await db.query(query,[matiere,matiere,filliere]);
         return NextResponse.json(response)
     }catch(error){
-        return NextResponse.json({error:error})
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
