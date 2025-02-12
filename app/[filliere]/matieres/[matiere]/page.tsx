@@ -8,19 +8,29 @@ import { useEffect, useState } from "react";
 type PersonResult={
     mat:string,
     nom:string,
-    moy:number
+    nt:number
+    nd:number
+    ne:number
+    nf:number
+    mo:number
 }
-type Infocard={
-    filliere:string,
+type InfoCard={
+    n:string
+    id:string
+    moy_d:number
+    moy_e:number
+    moy_f:number
+    moy_t:number
     nb:number
-    avarage:number
 }
+
 export default function Page() {
     const limit=20;
     const params = useParams();
-    const [response,setResponse]=useState([]);
-    // const [info,setInfo]=useState([]);
+    const [response,setResponse]=useState<PersonResult[]>([]);
+    const [info,setInfo]=useState<InfoCard>();
     const [nb,setNb]=useState(0);
+    const [tp,setTp]=useState(0);
     const searchParams=useSearchParams();
     const sort=searchParams.get('sort');
     const order=searchParams.get('order');
@@ -28,15 +38,16 @@ export default function Page() {
 
     useEffect(() => {
         const fetchInfo=async()=>{
-            const data = await fetch(`/api/fillieres/${params.filliere}/info`);
+            const data = await fetch(`/api/fillieres/${params.filliere}/matieres/${params.matiere}/info`);
               const result = await data.json();
               if(result){
-                //   setInfo(result[0]);
+                  setInfo(result[0]);
                   setNb(result[0].nb)
+                  setTp(result[0].moy_t)
               }
         }
         const fetchData = async () => {
-          const data = await fetch(`/api/fillieres/${params.filliere}?sort=${sort}&order=${order}&page=${page}`);
+          const data = await fetch(`/api/fillieres/${params.filliere}/matieres/${params.matiere}?sort=${sort}&order=${order}&page=${page}`);
           const result = await data.json();
           if(result){
               setResponse(result);
@@ -73,37 +84,64 @@ export default function Page() {
         <>
         <div className="container m-auto">
             <NavBar/>
-            <div className="main shadow-xl rounded-lg p-3 ">
-                <table className="result-table w-full shadow-xl border-collapse">
+            <div className="main shadow-xl rounded-lg p-3 px-1 ">
+                <table className="matieres-table result-table w-full shadow-xl border-collapse">
                     <thead className="bg-gray-50 border-b-2 border-gray-200 rounded-lg">
                         <tr className=" table-row  rounded-lg">
-                            <th className="p-3 text-sm font-semibold text-left">Nb</th>
-                            <th className="text-sm font-semibold text-left" >
+                            <th className="p-3 px-1 text-xs md:text-sm font-semibold text-left">Nb</th>
+                            <th className="text-xs md:text-sm font-semibold text-left" >
                                 <Link href={`?sort=mat&order=${ordering('mat',0)}&page=1`}
-                                className={`p-3 ${sortingColumn('mat')}`}
+                                className={`p-3 px-1 ${sortingColumn('mat')}`}
                                 >matricule</Link></th>
-                            <th className="text-sm font-semibold text-left">
+                            <th className="text-xs md:text-sm font-semibold text-left">
                                 <Link href={`?sort=nom&order=${ordering('nom',0)}&page=1`}
-                                className={`p-3 pr-12 ${sortingColumn('nom')}`}
+                                className={`p-1 sm:p-3 px-1 pr-12 ${sortingColumn('nom')}`}
                                 >nom</Link></th>
-                            <th className="text-sm font-semibold text-left">
-                                <Link href={`?sort=moy&order=${ordering('moy',1)}&page=1`}
-                                className={`p-3 ${sortingColumn('moy')}`}
+                            <th className="text-xs md:text-sm font-semibold text-left">
+                                <Link href={`?sort=mo&order=${ordering('mo',1)}&page=1`}
+                                className={`p-1 md:p-3 px-1 ${sortingColumn('mo')}`}
                                 >moyenne</Link></th>
+                                {(()=>{
+                                    if(tp>0){
+                                        return(<th className="text-xs md:text-sm font-semibold text-left">
+                                            <Link href={`?sort=nt&order=${ordering('nt',1)}&page=1`}
+                                            className={`p-3 px-1 ${sortingColumn('nt')}`}
+                                            >tp</Link></th>)
+                                    }
+                                })()}
+                            <th className="text-xs md:text-sm font-semibold text-left">
+                                <Link href={`?sort=nd&order=${ordering('nd',1)}&page=1`}
+                                className={`p-3 px-1 ${sortingColumn('nd')}`}
+                                >devoir</Link></th>
+                            <th className="text-xs md:text-sm font-semibold text-left">
+                                <Link href={`?sort=ne&order=${ordering('ne',1)}&page=1`}
+                                className={`p-3 px-1 ${sortingColumn('ne')}`}
+                                >examen</Link></th>
+                            <th className="text-xs md:text-sm font-semibold text-left">
+                                <Link href={`?sort=nf&order=${ordering('nf',1)}&page=1`}
+                                className={`p-3 px-1 ${sortingColumn('nf')}`}
+                                >final</Link></th>
                         </tr>
                     </thead>
                     <tbody>
                     {response.map((value:PersonResult, index:number) => (
                         <tr key={index} className="bg-gray-50 border-b-2 border-gray-200">
-                        <td className="p-3 text-sm text-gray-700 font-semibold">{(page-1)*limit+index + 1}</td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold">{value.mat}</td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold">{value.nom}</td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold">{value.moy}</td>
+                        <td className="p-3 px-1 text-xs text-gray-700 font-semibold">{(page-1)*limit+index + 1}</td>
+                        <td className="p-3 px-1 text-xs text-gray-700 font-semibold">{value.mat}</td>
+                        <td className="p-3 px-1 text-xs text-gray-700 font-semibold">{value.nom}</td>
+                        <td className="p-3 px-1 text-xs text-gray-700 font-semibold">{value.mo}</td>
+                        {(()=>{if(tp>0){
+                                        return(
+                                            <td className="p-3 px-1 text-xs text-gray-700 font-semibold">{value.nt}</td>
+                                        )}})()}
+                        <td className="p-3 px-1 text-xs text-gray-700 font-semibold">{value.nd}</td>
+                        <td className="p-3 px-1 text-xs text-gray-700 font-semibold">{value.ne}</td>
+                        <td className="p-3 px-1 text-xs text-gray-700 font-semibold">{value.nf}</td>
                         </tr>
                     )) || []}
                     </tbody>
                 </table>
-            <div className="pagination text-sm mt-3 w-full py-3 rounded-md shadow-xl flex justify-evenly max-w-md lg:p-5 gap-1 m-auto">
+            <div className="pagination text-xs mt-3 w-full py-3 rounded-md shadow-xl flex justify-evenly max-w-md lg:p-5 gap-1 m-auto">
                     {(()=>{
                         const pages=[];
                         if(page>1){

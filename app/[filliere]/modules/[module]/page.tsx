@@ -8,18 +8,13 @@ import { useEffect, useState } from "react";
 type PersonResult={
     mat:string,
     nom:string,
-    moy:number
+    moy_m:number
 }
-type Infocard={
-    filliere:string,
-    nb:number
-    avarage:number
-}
+
 export default function Page() {
     const limit=20;
     const params = useParams();
     const [response,setResponse]=useState([]);
-    // const [info,setInfo]=useState([]);
     const [nb,setNb]=useState(0);
     const searchParams=useSearchParams();
     const sort=searchParams.get('sort');
@@ -28,7 +23,7 @@ export default function Page() {
 
     useEffect(() => {
         const fetchInfo=async()=>{
-            const data = await fetch(`/api/fillieres/${params.filliere}/info`);
+            const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}/info`);
               const result = await data.json();
               if(result){
                 //   setInfo(result[0]);
@@ -36,7 +31,7 @@ export default function Page() {
               }
         }
         const fetchData = async () => {
-          const data = await fetch(`/api/fillieres/${params.filliere}?sort=${sort}&order=${order}&page=${page}`);
+          const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}?sort=${sort}&order=${order}&page=${page}`);
           const result = await data.json();
           if(result){
               setResponse(result);
@@ -87,8 +82,8 @@ export default function Page() {
                                 className={`p-3 pr-12 ${sortingColumn('nom')}`}
                                 >nom</Link></th>
                             <th className="text-sm font-semibold text-left">
-                                <Link href={`?sort=moy&order=${ordering('moy',1)}&page=1`}
-                                className={`p-3 ${sortingColumn('moy')}`}
+                                <Link href={`?sort=moy&order=${ordering('moy_m',1)}&page=1`}
+                                className={`p-3 ${sortingColumn('moy_m')}`}
                                 >moyenne</Link></th>
                         </tr>
                     </thead>
@@ -98,7 +93,7 @@ export default function Page() {
                         <td className="p-3 text-sm text-gray-700 font-semibold">{(page-1)*limit+index + 1}</td>
                         <td className="p-3 text-sm text-gray-700 font-semibold">{value.mat}</td>
                         <td className="p-3 text-sm text-gray-700 font-semibold">{value.nom}</td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold">{value.moy}</td>
+                        <td className="p-3 text-sm text-gray-700 font-semibold">{value.moy_m}</td>
                         </tr>
                     )) || []}
                     </tbody>

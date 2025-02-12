@@ -1,7 +1,7 @@
 import React from 'react'
 import SearchBar from './SearchBar'
 
-export default function Header() {
+export default function NavBar() {
   return (
     <div className='bg-black w-full h-15'>
       <ul className='flex justify-between text-stone-100 text-md  p-2 items-center'>
@@ -9,10 +9,10 @@ export default function Header() {
         <a href="/">home</a>
         </li>
         <li>
-        <a href="/module">modules</a>
+        <a href="/modules">modules</a>
         </li>
         <li>
-        <a href="/matiere">matieres</a>
+        <a href="/matieres">matieres</a>
         </li>
         <li>
           <img src='/burger.svg' className=' bg-slate-300 w-5 sm:hidden'/>

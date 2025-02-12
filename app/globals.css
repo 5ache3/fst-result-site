@@ -31,3 +31,46 @@ body {
 .result-table tr:nth-last-of-type(even){
   background-color: #efefef ;
 }
+.result-table .sort-asc::after{
+  content: "\25b4";
+  color: rgb(15, 248, 15);
+  font-size: 1.5em;
+  padding-left: 2px;
+}
+
+.result-table .sort-desc::after{
+  content: "\25be";
+  color: red;
+  font-size: 1.5em;
+  padding-left: 2px;
+}
+.current-page {
+  background-color: aquamarine;
+}
+.disabled-button{
+  background-color: #c0bdbd;
+}
+@media(max-width: 770px){
+  .pagination{
+    font-size: .8rem;
+  }
+  .matieres-table td,.matieres-table th{
+    font-size: .7rem;
+    padding-top:0.65rem ;
+    padding-bottom:0.65rem ;
+    padding-left:0.20rem ;
+    padding-right:0.20rem ;
+  }
+}
+@media(max-width: 560px){
+  .pagination{
+    font-size: .7rem;
+  }
+  .matieres-table td,.matieres-table th{
+    font-size: .45rem;
+    padding-top:0.45rem ;
+    padding-bottom:0.45rem ;
+    padding-left:0.15rem ;
+    padding-right:0.15rem ;
+  }
+}

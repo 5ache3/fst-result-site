@@ -2,11 +2,13 @@ import { createConnection } from "@/lib/connection";
 import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
     try {
-        const { filliere,module } = params;
+        const { filliere,module } = await params;
         const db = await createConnection()
         // const query="SELECT DISTINCT module m FROM matieres WHERE fil=? AND (semestre='S1' OR semestre='S3' OR semestre='S5') AND module not like 'M%' order by m";
-        const query=`SELECT module,avg(moyenne) moy,count(decision) cont from modules 
-                    WHERE module =? and modules.fil =? and semestre IN (?)`;
+        const query=`SELECT name n,ma.id id,m.module m,avg(m.moyenne) moy,count( DISTINCT m.matricule) nb from modules m
+                    INNER JOIN matieres ma ON 
+                            ma.module=m.module 
+                    WHERE m.module =? and m.fil =? and m.semestre IN (?) GROUP BY name,id`;
         const [response]= await db.query(query,[module,filliere,['S1','S3','S5']]);
         return NextResponse.json(response)
     }catch(error){
