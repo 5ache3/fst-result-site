@@ -50,6 +50,10 @@ body {
 .disabled-button{
   background-color: #c0bdbd;
 }
+.text-2xs{
+  font-size: 0.6rem;
+  line-height: 1rem;
+}
 @media(max-width: 770px){
   .pagination{
     font-size: .8rem;
