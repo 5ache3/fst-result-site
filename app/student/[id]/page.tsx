@@ -1,0 +1,107 @@
+'use client'
+import NavBar from '@/components/NavBar'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+
+type MatiereData={
+    mat_n: string
+    mod_n: string
+    nt: number
+    nd: number
+    ne: number
+    nf: number
+    r: string
+    d:string
+}
+
+type ModuleData={
+    n : string
+    m : number
+    d:string
+}
+
+type InfoCard={
+    name: string,
+    mat: string,
+    fil:string,
+    filliere: string,
+    a: string,
+    d: string,
+    moyenne: number
+}
+export default function page() {
+    const params=useParams();
+    const [matiereRes,setMatiereRes]=useState<MatiereData[]>([])
+    const [moduleRes,setModuleRes]=useState<ModuleData[]>([])
+    const [info,setInfo]=useState<InfoCard>()
+    useEffect(()=>{
+        const fetchInfo = async ()=>{
+            const data = await fetch(`/api/person/${params.id}/info`);
+            const result = await data.json();
+            if(result){
+                setInfo(result[0]);
+            }
+
+        };
+        const fetchData = async ()=>{
+            const data = await fetch(`/api/person/${params.id}`);
+            const result = await data.json();
+            if(result){
+                setMatiereRes(result[0]);
+                setModuleRes(result[1]);
+            }
+        }
+        fetchData()
+        fetchInfo()
+    },[params.id])
+
+  return (
+    <>
+    <div  className="container m-auto">
+        <NavBar/>
+        <div className='main'>
+            <div className='builtin p-1 bg-slate-200'>
+            {moduleRes.map((item)=>(
+                <div className='p-2 ' key={item.n}>
+                <div className='bg-slate-100 rounded-md p-1 shadow-xl'>
+                    <div className='matieres bg-slate-50 rounded-sd shadow-xl'>
+                        <table>
+                            <tbody>
+                        {matiereRes
+                            .filter((matiere) => matiere.mod_n === item.n)
+                            .map((mat) => (
+                                <tr key={mat.r} className='text-xs font-semibold  md:text-lg'>                                
+                                    <td className='p-1 nom w-full '><Link href={`/${info?.fil}/matieres/${mat.r}`} className='text-blue-950 hover:underline hover:text-blue-400'>{mat.mat_n}</Link></td>
+                                    <td className='flex gap-1'>
+                                    <div className=' w-10 md:w-20 h-10 md:h-15 text-center py-2 '>{mat.nt}</div>
+                                    <div className=' w-10 md:w-20 h-10 md:h-15 text-center py-2 '>{mat.nd}</div>
+                                    <div className=' w-10 md:w-20 h-10 md:h-15 text-center py-2 '>{mat.ne}</div>
+                                    <div className=' w-10 md:w-20 h-10 md:h-15 text-center py-2 '>{mat.nf}</div>
+                                    <div className=' w-7 md:w-15 h-10 md:h-15 text-center py-2 '>{mat.d}</div>
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className='m-2 flex justify-evenly text-xs md:text-lg'>
+                        <div>
+                            <span className='text-gray-500'> Module: </span><Link href={`/${info?.fil}/modules/${item.n}`} className='text-blue-950 hover:underline hover:text-blue-400'> {item.n}</Link>
+                        </div>
+                        <div>
+                            <span className='text-gray-500'> Moyenne: </span> {item.m}
+                        </div>
+                        <div>
+                            <span className='text-gray-500'> Observations: </span> {item.d}
+                        </div>
+                    </div>
+                </div>
+                </div>
+            ))}
+            </div>
+        </div>
+    </div>
+    </>
+  )
+}

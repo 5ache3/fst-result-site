@@ -141,7 +141,7 @@ export default function Page() {
                     )) || []}
                     </tbody>
                 </table>
-            <div className="pagination text-xs mt-3 w-full py-3 rounded-md shadow-xl flex justify-evenly max-w-md lg:p-5 gap-1 m-auto">
+            <div className="pagination p-2 text-xs mt-3 w-full py-5 rounded-md shadow-xl flex justify-evenly max-w-md lg:p-5 gap-1 m-auto">
                     {(()=>{
                         const pages=[];
                         if(page>1){
