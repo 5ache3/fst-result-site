@@ -62,32 +62,32 @@ export default function page() {
         <NavBar/>
         <div className='main p-2'>
             <div className='m-auto builtin p-1 max-w-screen-lg bg-slate-200'>
-            <div className='buirtin-header pr-3 pl-4'>
-            <table>
-                <tbody>
-                    <tr className='text-2xs lg:text-md font-semibold '>                                
-                        <td className='p-1 nom w-full '>Nom </td>
-                        <td className='flex gap-1'>
-                        <div className=' w-10 text-center md:w-20 md:h-15 text-wrap py-2 '>Note Tp</div>
-                        <div className=' w-10 text-center md:w-20 md:h-15  py-2 '>Note Devoir</div>
-                        <div className=' w-10 text-center md:w-20 md:h-15  py-2 '>Note Examen</div>
-                        <div className=' w-10 text-center md:w-20 md:h-15  text-wrap py-2 '>Note Finale</div>
-                        <div className=' w-10 text-center md:w-20 md:h-15  text-clip py-2'><span className=' hidden md:block'>Observation</span></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div className='builtin-header pr-3 pl-4'>
+                <table>
+                    <tbody>
+                        <tr className='lg:text-md font-semibold '>                                
+                            <td className='p-1 nom w-full '>Nom </td>
+                            <td className='flex gap-1'>
+                            <div className=' w-10 text-center md:w-20 md:h-15 text-wrap py-2 '>Note Tp</div>
+                            <div className=' w-10 text-center md:w-20 md:h-15  py-2 '>Note Devoir</div>
+                            <div className=' w-10 text-center md:w-20 md:h-15  py-2 '>Note Examen</div>
+                            <div className=' w-10 text-center md:w-20 md:h-15  text-wrap py-2 '>Note Finale</div>
+                            <div className=' w-10 text-center md:w-20 md:h-15  text-clip py-2'><span className=' hidden md:block'>Observation</span></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             {moduleRes.map((item)=>(
                 <div className='p-2 pt-1' key={item.n}>
                 <div className='bg-slate-100 rounded-md p-1 shadow-xl'>
-                    <div className='matieres bg-slate-50 rounded-sd shadow-xl'>
+                    <div className='matieres bg-slate-50 rounded-md shadow-xl'>
                         <table>
                             <tbody>
                         {matiereRes
                             .filter((matiere) => matiere.mod_n === item.n)
                             .map((mat) => (
-                                <tr key={mat.r} className='text-xs font-semibold  md:text-lg'>                                
+                                <tr key={mat.r} className='text-xs font-semibold md:text-lg border-b-2'>                                
                                     <td className='p-1 nom w-full '><Link href={`/${info?.fil}/matieres/${mat.r}`} className='text-blue-950 hover:underline hover:text-blue-400'>{mat.mat_n}</Link></td>
                                     <td className='flex gap-1'>
                                     <div className=' w-10 text-center md:w-20 h-10 md:h-15 py-2 '>{mat.nt}</div>
@@ -102,15 +102,9 @@ export default function page() {
                         </table>
                     </div>
                     <div className='m-2 flex justify-evenly text-xs md:text-lg'>
-                        <div>
-                            <span className='text-gray-500'> Module: </span><Link href={`/${info?.fil}/modules/${item.n}`} className='text-blue-950 hover:underline hover:text-blue-400'> {item.n}</Link>
-                        </div>
-                        <div>
-                            <span className='text-gray-500'> Moyenne: </span> {item.m}
-                        </div>
-                        <div>
-                            <span className='text-gray-500'> Observations: </span> {item.d}
-                        </div>
+                        <div><span className='text-gray-500'> Module: </span><Link href={`/${info?.fil}/modules/${item.n}`} className='text-blue-950 hover:underline hover:text-blue-400'> {item.n}</Link></div>
+                        <div><span className='text-gray-500'> Moyenne: </span> {item.m}</div>
+                        <div><span className='text-gray-500'> Observations: </span> {item.d}</div>
                     </div>
                 </div>
                 </div>

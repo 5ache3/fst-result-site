@@ -54,6 +54,26 @@ body {
   font-size: 0.6rem;
   line-height: 1rem;
 }
+tr:first-child th:first-child{
+  border-top-left-radius: 10px;
+}
+tr:first-child th:last-child{
+  border-top-right-radius: 10px;
+}
+tr:last-child td:first-child{
+  border-bottom-left-radius: 20px;
+  box-shadow: inset;
+}
+tr:last-child td:last-child{
+  border-bottom-right-radius: 20px;
+}
+tr:last-child {
+  border: none;
+}
+.main{
+  border-radius: 10px;
+}
+
 @media(max-width: 770px){
   .pagination{
     font-size: .8rem;
@@ -65,8 +85,17 @@ body {
     padding-left:0.20rem ;
     padding-right:0.20rem ;
   }
+
+  .builtin-header,.matieres{
+    font-size: .7rem;
+    padding-bottom: 0px;
+  }
 }
 @media(max-width: 560px){
+  .builtin-header,.matieres{
+    font-size: .6rem;
+    padding-bottom: 0px;
+  }
   .pagination{
     font-size: .7rem;
   }

@@ -76,7 +76,7 @@ export default function Page() {
             <div className="main shadow-xl rounded-lg p-3 ">
                 <table className="result-table w-full shadow-xl border-collapse">
                     <thead className="bg-gray-50 border-b-2 border-gray-200 rounded-lg">
-                        <tr className=" table-row  rounded-lg">
+                        <tr className=" table-row">
                             <th className="p-3 text-sm font-semibold text-left">Nb</th>
                             <th className="text-sm font-semibold text-left" >
                                 <Link href={`?sort=mat&order=${ordering('mat',0)}&page=1`}
