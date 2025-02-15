@@ -2,9 +2,8 @@
 
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState,ChangeEvent } from "react";
 type PersonResult={
     mat:string,
     nom:string,
@@ -15,9 +14,15 @@ type Infocard={
     nb:number
     avarage:number
 }
+type Filliere = {
+    L: string;
+    l: string;
+};
+
 export default function Page() {
     const limit=20;
     const params = useParams();
+    const filliere=params.filliere;
     const [response,setResponse]=useState([]);
     // const [info,setInfo]=useState([]);
     const [nb,setNb]=useState(0);
@@ -25,27 +30,40 @@ export default function Page() {
     const sort=searchParams.get('sort');
     const order=searchParams.get('order');
     const page=Number(searchParams.get('page'))||1;
-
-    useEffect(() => {
-        const fetchInfo=async()=>{
-            const data = await fetch(`/api/fillieres/${params.filliere}/info`);
-              const result = await data.json();
-              if(result){
-                //   setInfo(result[0]);
-                  setNb(result[0].nb)
-              }
+    const [fills, setFills] = useState<Filliere[]>([]);
+    
+    const router = useRouter();
+    
+    const fetchFillieres = async () => {
+        try {
+          const response = await fetch("/api/fillieres/list");
+          const data = await response.json();
+          setFills(data);
+        } catch (error) {
+          console.error("Failed to fetch fillieres:", error);
         }
-        const fetchData = async () => {
-          const data = await fetch(`/api/fillieres/${params.filliere}?sort=${sort}&order=${order}&page=${page}`);
-          const result = await data.json();
-          if(result){
-              setResponse(result);
-          }
+      };
 
-          return result;
-        };
+      const fetchInfo=async()=>{
+          const data = await fetch(`/api/fillieres/${params.filliere}/info`);
+            const result = await data.json();
+            if(result){
+              //   setInfo(result[0]);
+                setNb(result[0].nb)
+            }
+      }
+      const fetchData = async () => {
+        const data = await fetch(`/api/fillieres/${params.filliere}?sort=${sort}&order=${order}&page=${page}`);
+        const result = await data.json();
+        if(result){
+            setResponse(result);
+        }
+        return result;
+      };
+    useEffect(() => {
         fetchData()
         fetchInfo()
+        fetchFillieres()
       }, [sort,order,page]);
 
       const ordering=(by:string,ind:number)=>{
@@ -69,11 +87,35 @@ export default function Page() {
         }
         return 'sort-asc'
       }
+        const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        
+        const selectedValue = event.target.value;
+        
+        if (selectedValue) {
+            router.push(`/${selectedValue}`);
+        }else{
+            router.push("/");
+          }
+        };
     return(
         <>
         <div className="container m-auto">
-            <NavBar/>
+            <NavBar filliere={params.filliere}/>
             <div className="main shadow-xl rounded-lg p-3 ">
+                <div className="flex justify-around">
+                    <select
+                    onChange={handleChange}
+                    value={filliere}  
+                    className="p-3 my-5 w-64 border border-gray-600 bg-slate-200 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    >
+                    <option value="">ALL</option>
+                    {fills.map((fil) => (
+                        <option key={fil.l}  value={fil.l}>
+                        {fil.L}
+                        </option>
+                    ))}
+                    </select>
+                </div>
                 <table className="result-table w-full shadow-xl border-collapse">
                     <thead className="bg-gray-50 border-b-2 border-gray-200 rounded-lg">
                         <tr className=" table-row">
@@ -103,7 +145,13 @@ export default function Page() {
                     )) || []}
                     </tbody>
                 </table>
-            <div className="pagination text-sm mt-3 w-full py-3 rounded-md shadow-xl flex justify-evenly max-w-md lg:p-5 gap-1 m-auto">
+                
+                <div className="pagination text-sm mt-3 shadow-xl rounded-md ">
+                  <div className="p-3 text-lg font-semibold text-center text-gray-400">
+                      Page <span className="text-black">{page} </span>
+                       OF <span className="text-black">{Math.ceil(nb/limit)}</span>
+                  </div>
+                  <div className="w-full py-3 rounded-md  flex justify-evenly max-w-md lg:p-5 gap-1 m-auto">
                     {(()=>{
                         const pages=[];
                         if(page>1){
@@ -138,7 +186,8 @@ export default function Page() {
                     }
                         return pages;
                     })()}
-            </div>
+                  </div>
+                </div>
             </div>
         </div>
         </>

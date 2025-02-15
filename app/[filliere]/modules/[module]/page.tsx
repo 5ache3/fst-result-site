@@ -10,12 +10,20 @@ type PersonResult={
     nom:string,
     moy_m:number
 }
-
+type matieres={
+    n:string
+    id:string
+    m:string
+    moy:number
+    nb:number
+}
 export default function Page() {
     const limit=20;
     const params = useParams();
+    const filliere=params.filliere;
     const [response,setResponse]=useState([]);
     const [nb,setNb]=useState(0);
+    const [info,setInfo]=useState<matieres[]>();
     const searchParams=useSearchParams();
     const sort=searchParams.get('sort');
     const order=searchParams.get('order');
@@ -26,8 +34,8 @@ export default function Page() {
             const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}/info`);
               const result = await data.json();
               if(result){
-                //   setInfo(result[0]);
-                  setNb(result[0].nb)
+                setInfo(result);
+                setNb(result[0].nb)
               }
         }
         const fetchData = async () => {
@@ -67,8 +75,19 @@ export default function Page() {
     return(
         <>
         <div className="container m-auto">
-            <NavBar/>
-            <div className="main shadow-xl rounded-lg p-3 ">
+            <NavBar filliere={filliere}/>
+            <div className="main shadow-xl rounded-lg ">
+                <div className="cards p-3 flex flex-wrap m-auto gap-3  ">
+                   {info?.map((mat)=>(
+                    <div 
+                        className="h-20 a-fucking-card bg-slate-100 m-auto hover:bg-white border-gray-400 min-w-[47%] max-w-[50%] text-center rounded-lg shadow-md flex flex-col  font-semibold"
+                        key={mat.id}>
+                        <Link href={`/${filliere}/matieres/${mat.id}`}
+                        className=" hover:text-blue-400"
+                        >{mat.n}</Link>
+                        </div>
+                   ))}
+                </div>
                 <table className="result-table w-full shadow-xl border-collapse">
                     <thead className="bg-gray-50 border-b-2 border-gray-200 rounded-lg">
                         <tr className=" table-row  rounded-lg">
@@ -91,14 +110,19 @@ export default function Page() {
                     {response.map((value:PersonResult, index:number) => (
                         <tr key={index} className="bg-gray-50 border-b-2 border-gray-200">
                         <td className="p-3 text-sm text-gray-700 font-semibold">{(page-1)*limit+index + 1}</td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className='hover:underline hover:text-blue-400'>{value.mat}</Link></td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className='hover:underline hover:text-blue-400'>{value.nom}</Link></td>
+                        <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className=' hover:text-blue-400'>{value.mat}</Link></td>
+                        <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className=' hover:text-blue-400'>{value.nom}</Link></td>
                         <td className="p-3 text-sm text-gray-700 font-semibold">{value.moy_m}</td>
                         </tr>
                     )) || []}
                     </tbody>
                 </table>
-            <div className="pagination text-sm mt-3 w-full py-3 rounded-md shadow-xl flex justify-evenly max-w-md lg:p-5 gap-1 m-auto">
+                <div className="pagination text-sm mt-3 shadow-xl rounded-md ">
+                  <div className="p-3 text-lg font-semibold text-center text-gray-400">
+                      Page <span className="text-black">{page} </span>
+                       OF <span className="text-black">{Math.ceil(nb/limit)}</span>
+                  </div>
+                  <div className="w-full py-3 rounded-md  flex justify-evenly max-w-md lg:p-5 gap-1 m-auto">
                     {(()=>{
                         const pages=[];
                         if(page>1){
@@ -133,7 +157,8 @@ export default function Page() {
                     }
                         return pages;
                     })()}
-            </div>
+                  </div>
+                </div>
             </div>
         </div>
         </>

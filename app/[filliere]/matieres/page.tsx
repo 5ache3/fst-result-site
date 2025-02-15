@@ -25,7 +25,7 @@ export default function page() {
   return (
     <>
     <div className='container m-auto'>
-        <NavBar/>
+        <NavBar filliere={params.filliere}/>
         <div className='container flex flex-col bg-slate-100 '>
           
         {(()=>{

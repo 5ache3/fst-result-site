@@ -3,9 +3,9 @@ import SearchBar from './SearchBar'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-export default function NavBar() {
+export default function NavBar({filliere}) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const path = filliere ? filliere:'';
   return (
     <nav className='bg-black text-white w-full shadow-lg rounded-sm md:rounded-lg'>
       <div className='flex justify-between items-center p-4 max-w-7xl mx-auto'>
@@ -15,8 +15,8 @@ export default function NavBar() {
         
         {/* Desktop Menu */}
         <div className='hidden md:flex space-x-8 items-center'>
-          <Link href='/matieres' className='hover:text-gray-300 transition duration-300'>Matieres</Link>
-          <Link href='/modules' className='hover:text-gray-300 transition duration-300'>Modules</Link>
+          <Link href={`http://localhost:3000/${path}/matieres/`} className='hover:text-gray-300 transition duration-300'>Matieres</Link>
+          <Link href={`http://localhost:3000/${path}/modules/`} className='hover:text-gray-300 transition duration-300'>Modules</Link>
           <SearchBar />
         </div>
 

@@ -52,14 +52,14 @@ export default function page() {
                 setModuleRes(result[1]);
             }
         }
-        fetchData()
         fetchInfo()
+        fetchData()
     },[params.id])
 
   return (
     <>
     <div  className="container m-auto">
-        <NavBar/>
+        <NavBar filliere={info?.fil}/>
         <div className='main p-2'>
             <div className='m-auto builtin p-1 max-w-screen-lg bg-slate-200'>
             <div className='builtin-header pr-3 pl-4'>

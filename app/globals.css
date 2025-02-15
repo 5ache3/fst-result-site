@@ -28,7 +28,7 @@ body {
 .result-table tr{
   border-bottom: #c3c3c3 1px solid;
 }
-.result-table tr:nth-last-of-type(even){
+.result-table tbody tr:nth-last-of-type(even){
   background-color: #efefef ;
 }
 .result-table .sort-asc::after{
@@ -53,6 +53,12 @@ body {
 .text-2xs{
   font-size: 0.6rem;
   line-height: 1rem;
+}
+.a-fucking-card{
+  justify-content: center;
+  
+  height: 80px;
+
 }
 tr:first-child th:first-child{
   border-top-left-radius: 10px;
