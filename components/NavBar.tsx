@@ -1,26 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SearchBar from './SearchBar'
-
+import Link from 'next/link'
+import { Menu, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 export default function NavBar() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className='bg-black w-full h-15'>
-      <ul className='flex justify-between text-stone-100 text-md  p-2 items-center'>
-        <li>
-        <a href="/">home</a>
-        </li>
-        <li>
-        <a href="/modules">modules</a>
-        </li>
-        <li>
-        <a href="/matieres">matieres</a>
-        </li>
-        <li>
-          <img src='/burger.svg' className=' bg-slate-300 w-5 sm:hidden'/>
-        </li>
-        <li  className='hidden sm:block'>
-          <SearchBar/>
-        </li>
-      </ul>
-    </div>
+    <nav className='bg-black text-white w-full shadow-lg rounded-sm md:rounded-lg'>
+      <div className='flex justify-between items-center p-4 max-w-7xl mx-auto'>
+        <Link href='/' className='text-2xl font-bold hover:text-gray-300 transition duration-300'>
+          Home
+        </Link>
+        
+        {/* Desktop Menu */}
+        <div className='hidden md:flex space-x-8 items-center'>
+          <Link href='/matieres' className='hover:text-gray-300 transition duration-300'>Matieres</Link>
+          <Link href='/modules' className='hover:text-gray-300 transition duration-300'>Modules</Link>
+          <SearchBar />
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button className='md:hidden' onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <X className='w-8 h-8' /> : <Menu className='w-8 h-8' />}
+        </button>
+      </div>
+      
+      {/* Mobile Menu with Animation */}
+      <motion.div 
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: isOpen ? 1 : 0, height: isOpen ? 'auto' : 0 }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        className={`md:hidden bg-black w-full flex flex-col px-4 space-y-4 overflow-hidden ${isOpen ? 'py-4' : 'py-0'}`}
+      >
+        <Link href='/matieres' className='hover:text-gray-300 transition duration-300' onClick={() => setIsOpen(false)}>Matieres</Link>
+        <Link href='/modules' className='hover:text-gray-300 transition duration-300' onClick={() => setIsOpen(false)}>Modules</Link>
+        <SearchBar />
+      </motion.div>
+    </nav>
   )
 }

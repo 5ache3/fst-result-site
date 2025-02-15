@@ -16,7 +16,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   };
 
   return (
-    <div className="flex items-center gap-2 p-2 bg-gray-900 rounded-xl shadow-md w-full max-w-md">
+    <div className="flex items-center gap-2 bg-gray-900 rounded-xl shadow-md w-full max-w-md">
       <input
         type="text"
         placeholder="Search..."
