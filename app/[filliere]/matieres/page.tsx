@@ -1,7 +1,7 @@
 'use client'
 import NavBar from '@/components/NavBar'
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { ReactNode, useEffect, useState } from 'react'
 
 type matiere={
@@ -9,9 +9,27 @@ type matiere={
     id:string
     m:string
 }
+type Filliere = {
+  L: string;
+  l: string;
+};
+
 export default function page() {
     const [response,setResponse]=useState<matiere[]>([])
     const params = useParams();
+    const [fills, setFills] = useState<Filliere[]>([]);
+      
+      const router = useRouter();
+    
+      const fetchFillieres = async () => {
+        try {
+          const response = await fetch("/api/fillieres/list");
+          const data = await response.json();
+          setFills(data);
+        } catch (error) {
+          console.error("Failed to fetch fillieres:", error);
+        }
+      };
     useEffect(()=>{
         const fetchInfo=async()=>{
             const data = await fetch(`/api/fillieres/${params.filliere}/matieres`);
@@ -20,25 +38,59 @@ export default function page() {
                 setResponse(result);
               }
         }
-        fetchInfo()
+        fetchInfo();
+        fetchFillieres();
     },[params])
+
+    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const selectedValue = event.target.value;
+        if (selectedValue) {
+          router.push(`/${selectedValue}/matieres`);
+        }
+      };
   return (
     <>
     <div className='container m-auto'>
         <NavBar filliere={params.filliere}/>
-        <div className='container flex flex-col bg-slate-100 '>
-          
-        {(()=>{
-            const card:ReactNode[]=[];
-            if(response){
-            response.map(item=>{
-                card.push(<Link className='bg-slate-50' href={`/${params.filliere}/matieres/${item.id}`} key={item.id}>{item.n}</Link>)
-            })
-            }
-            return card;
-        })()}
-
+        <div className="main shadow-xl rounded-lg p-3 ">
+          <div className="flex justify-around">
+            <select
+              value={params.filliere}
+              onChange={handleChange}
+              className="p-3 my-5 w-64 border border-gray-600 bg-slate-200 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value=''>ALL</option>
+              {fills.map((fil) => (
+                <option key={fil.l} value={fil.l}>
+                  {fil.L}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className='flex flex-col'>
+            {(()=>{
+                const card:ReactNode[]=[];
+                if(response){
+                response.map(item=>{
+                    card.push(
+                      <div key={item.id} className='p-3 flex gap-20 font-semibold border-t-2 '>
+                        <Link 
+                          href={`/${params.filliere}/modules/${item.m}`}
+                          className='hover:text-blue-400'
+                          >{item.m}</Link>
+                        <Link className='bg-slate-50 hover:text-blue-400' href={`/${params.filliere}/matieres/${item.id}`} 
+                          key={item.id}
+                          >{item.n}
+                        </Link>
+                      </div>
+                      )})
+                  
+                  }
+                return card;
+            })()}
+          </div>
         </div>
+
     </div>
     </>
   )

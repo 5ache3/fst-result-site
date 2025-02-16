@@ -100,7 +100,7 @@ export default function Page() {
     return(
         <>
         <div className="container m-auto">
-            <NavBar filliere={params.filliere}/>
+            <NavBar filliere={filliere}/>
             <div className="main shadow-xl rounded-lg p-3 ">
                 <div className="flex justify-around">
                     <select

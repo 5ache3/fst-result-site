@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 export default function NavBar({filliere}) {
   const [isOpen, setIsOpen] = useState(false);
+  
   const path = filliere ? filliere:'';
   return (
     <nav className='bg-black text-white w-full shadow-lg rounded-sm md:rounded-lg'>
@@ -15,8 +16,8 @@ export default function NavBar({filliere}) {
         
         {/* Desktop Menu */}
         <div className='hidden md:flex space-x-8 items-center'>
-          <Link href={`http://localhost:3000/${path}/matieres/`} className='hover:text-gray-300 transition duration-300'>Matieres</Link>
-          <Link href={`http://localhost:3000/${path}/modules/`} className='hover:text-gray-300 transition duration-300'>Modules</Link>
+          <Link href={`/${path}/matieres/`} className='hover:text-gray-300 transition duration-300 font-semibold text-xl'>Matieres</Link>
+          <Link href={`/${path}/modules/`} className='hover:text-gray-300 transition duration-300 font-semibold text-xl'>Modules</Link>
           <SearchBar />
         </div>
 
@@ -33,8 +34,8 @@ export default function NavBar({filliere}) {
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         className={`md:hidden bg-black w-full flex flex-col px-4 space-y-4 overflow-hidden ${isOpen ? 'py-4' : 'py-0'}`}
       >
-        <Link href='/matieres' className='hover:text-gray-300 transition duration-300' onClick={() => setIsOpen(false)}>Matieres</Link>
-        <Link href='/modules' className='hover:text-gray-300 transition duration-300' onClick={() => setIsOpen(false)}>Modules</Link>
+        <Link href={`/${path}/matieres/`} className='hover:text-gray-300 transition duration-300 font-semibold text-xl' onClick={() => setIsOpen(false)}>Matieres</Link>
+        <Link href={`/${path}/modules/`} className='hover:text-gray-300 transition duration-300 font-semibold text-xl' onClick={() => setIsOpen(false)}>Modules</Link>
         <SearchBar />
       </motion.div>
     </nav>

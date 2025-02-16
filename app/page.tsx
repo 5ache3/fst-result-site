@@ -111,7 +111,7 @@ export default function Home() {
             </select>
           </div>
           
-          <table className="result-table w-full shadow-xl border-collapse">
+          <table className="result-table text-md w-full shadow-xl border-collapse">
                     <thead className="bg-gray-50 border-b-2 border-gray-200 rounded-lg">
                         <tr className=" table-row">
                             <th className="p-3 text-sm font-semibold text-left">Nb</th>
@@ -126,7 +126,7 @@ export default function Home() {
                             <th className="p-3 text-sm font-semibold text-left">Filliere</th>
                             <th className="text-sm font-semibold text-left">
                                 <Link href={`?sort=moy&order=${ordering('moy',1)}&page=1`}
-                                className={`p-3 ${sortingColumn('moy')}`}
+                                className={` ${sortingColumn('moy')}`}
                                 >moyenne</Link></th>
                         </tr>
                     </thead>

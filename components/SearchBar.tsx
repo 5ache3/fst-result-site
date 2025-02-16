@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface SearchBarProps {
@@ -8,10 +9,13 @@ interface SearchBarProps {
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [query, setQuery] = useState("");
-
+  const router = useRouter();
   const handleSearch = () => {
     if (onSearch) {
       onSearch(query);
+    }
+    if(query){
+      router.push(`/student/${query}`);
     }
   };
 

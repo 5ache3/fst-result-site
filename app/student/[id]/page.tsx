@@ -31,6 +31,7 @@ type InfoCard={
     moyenne: number
 }
 export default function page() {
+    const [loading, setLoading] = useState(true);
     const params=useParams();
     const [matiereRes,setMatiereRes]=useState<MatiereData[]>([])
     const [moduleRes,setModuleRes]=useState<ModuleData[]>([])
@@ -41,6 +42,7 @@ export default function page() {
             const result = await data.json();
             if(result){
                 setInfo(result[0]);
+                setLoading(false)
             }
 
         };
@@ -48,6 +50,7 @@ export default function page() {
             const data = await fetch(`/api/person/${params.id}`);
             const result = await data.json();
             if(result){
+                setLoading(false)
                 setMatiereRes(result[0]);
                 setModuleRes(result[1]);
             }
@@ -55,7 +58,9 @@ export default function page() {
         fetchInfo()
         fetchData()
     },[params.id])
-
+    if (loading) {
+        return <div style={{ textAlign: "center", marginTop: "50px" }}>Loading...</div>;
+      }
   return (
     <>
     <div  className="container m-auto">

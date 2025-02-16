@@ -47,8 +47,8 @@ export default function Page() {
 
           return result;
         };
-        fetchData()
         fetchInfo()
+        fetchData()
       }, [sort,order,page]);
 
       const ordering=(by:string,ind:number)=>{
@@ -80,7 +80,7 @@ export default function Page() {
                 <div className="cards p-3 flex flex-wrap m-auto gap-3  ">
                    {info?.map((mat)=>(
                     <div 
-                        className="h-20 a-fucking-card bg-slate-100 m-auto hover:bg-white border-gray-400 min-w-[47%] max-w-[50%] text-center rounded-lg shadow-md flex flex-col  font-semibold"
+                        className="h-20 py-1 a-fucking-card bg-slate-100 m-auto hover:bg-white border-gray-400 min-w-[47%] text-center rounded-lg shadow-md flex flex-col  font-semibold"
                         key={mat.id}>
                         <Link href={`/${filliere}/matieres/${mat.id}`}
                         className=" hover:text-blue-400"
