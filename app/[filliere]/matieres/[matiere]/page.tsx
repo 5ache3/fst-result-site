@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
@@ -27,6 +28,7 @@ type InfoCard={
 export default function Page() {
     const limit=20;
     const params = useParams();
+    const [loading,setLoading]=useState(true)
     const [response,setResponse]=useState<PersonResult[]>([]);
     const [info,setInfo]=useState<InfoCard>();
     const [nb,setNb]=useState(0);
@@ -36,27 +38,32 @@ export default function Page() {
     const order=searchParams.get('order');
     const page=Number(searchParams.get('page'))||1;
 
-    useEffect(() => {
-        const fetchInfo=async()=>{
-            const data = await fetch(`/api/fillieres/${params.filliere}/matieres/${params.matiere}/info`);
-              const result = await data.json();
-              if(result){
-                  setInfo(result[0]);
-                  setNb(result[0].nb)
-                  setTp(result[0].moy_t)
-              }
-        }
-        const fetchData = async () => {
-          const data = await fetch(`/api/fillieres/${params.filliere}/matieres/${params.matiere}?sort=${sort}&order=${order}&page=${page}`);
+    const fetchInfo=async()=>{
+        const data = await fetch(`/api/fillieres/${params.filliere}/matieres/${params.matiere}/info`);
           const result = await data.json();
           if(result){
-              setResponse(result);
+              setInfo(result[0]);
+              setNb(result[0].nb)
+              setTp(result[0].moy_t)
+              setLoading(false)
           }
+    }
+    const fetchData = async () => {
+      const data = await fetch(`/api/fillieres/${params.filliere}/matieres/${params.matiere}?sort=${sort}&order=${order}&page=${page}`);
+      const result = await data.json();
+      if(result){
+          setResponse(result);
+          setLoading(false)
+      }
+      return result;
+    };
 
-          return result;
-        };
-        fetchData()
+    useEffect(()=>{
         fetchInfo()
+    },[])
+
+    useEffect(() => {
+        fetchData()
       }, [sort,order,page]);
 
       const ordering=(by:string,ind:number)=>{
@@ -80,6 +87,9 @@ export default function Page() {
         }
         return 'sort-asc'
       }
+    if (loading) {
+    return <Loading/>
+    }
     return(
         <>
         <div className="container m-auto">

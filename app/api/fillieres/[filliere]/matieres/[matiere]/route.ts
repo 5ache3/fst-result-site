@@ -12,12 +12,12 @@ export async function GET(
         const url= new URL(req.url);
         const allowedSortColumns = ["mo", "mat", "nom",'nt','nd','ne','nf'];
         const allowedOrderValues = ["asc", "desc"];
-        let sort = url.searchParams.get("sort") || "mo"; 
+        let sort = url.searchParams.get("sort") || "nf"; 
         let order = url.searchParams.get("order") || "desc";
         let page = Number(url.searchParams.get("page")) || 1;
         const start=limit*(page-1);
         
-        if (!allowedSortColumns.includes(sort)) sort = "mo";
+        if (!allowedSortColumns.includes(sort)) sort = "nf";
         if(!['mo','nt','ne','nd','nf'].includes(sort)){
             if(!url.searchParams.get("order")||!allowedOrderValues.includes(order)){
                 order='asc'

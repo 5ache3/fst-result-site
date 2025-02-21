@@ -1,4 +1,5 @@
 'use client'
+import Loading from '@/components/Loading'
 import NavBar from '@/components/NavBar'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -57,9 +58,9 @@ export default function page() {
         }
         fetchInfo()
         fetchData()
-    },[params.id])
+    },[])
     if (loading) {
-        return <div style={{ textAlign: "center", marginTop: "50px" }}>Loading...</div>;
+        return <Loading/>
       }
   return (
     <>

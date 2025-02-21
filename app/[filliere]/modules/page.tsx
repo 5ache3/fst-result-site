@@ -1,4 +1,5 @@
 'use client'
+import Loading from '@/components/Loading';
 import NavBar from '@/components/NavBar'
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -16,6 +17,7 @@ type Filliere = {
 export default function page() {
     const [response,setResponse]=useState<modules[]>([])
     const params = useParams();
+    const [loading,setLoading]=useState(true)
     const [fills, setFills] = useState<Filliere[]>([]);
     const router = useRouter();
 
@@ -24,19 +26,24 @@ export default function page() {
         const response = await fetch("/api/fillieres/list");
         const data = await response.json();
         setFills(data);
+        setLoading(false)
       } catch (error) {
         console.error("Failed to fetch fillieres:", error);
       }
     };
+    useEffect(()=>{
+      fetchFillieres()
+    },[])
+    
     useEffect(()=>{
         const fetchInfo=async()=>{
             const data = await fetch(`/api/fillieres/${params.filliere}/modules`);
               const result = await data.json();
               if(result){
                 setResponse(result);
+                setLoading(false)
               }
         }
-        fetchFillieres()
         fetchInfo()
     },[params])
 
@@ -46,6 +53,9 @@ export default function page() {
         router.push(`/${selectedValue}/modules`);
       }
     };
+    if (loading) {
+      return <Loading/>
+    }
   return (
     <>
     <div className='container m-auto'>

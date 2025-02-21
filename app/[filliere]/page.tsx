@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -20,11 +21,13 @@ type Filliere = {
 };
 
 export default function Page() {
+
     const limit=20;
     const params = useParams();
     const filliere=params.filliere;
     const [response,setResponse]=useState([]);
     // const [info,setInfo]=useState([]);
+    const [loading,setLoading]=useState(true)
     const [nb,setNb]=useState(0);
     const searchParams=useSearchParams();
     const sort=searchParams.get('sort');
@@ -57,13 +60,16 @@ export default function Page() {
         const result = await data.json();
         if(result){
             setResponse(result);
+            setLoading(false);
         }
         return result;
       };
+    useEffect(()=>{
+        fetchFillieres()
+        fetchInfo()
+    },[])
     useEffect(() => {
         fetchData()
-        fetchInfo()
-        fetchFillieres()
       }, [sort,order,page]);
 
       const ordering=(by:string,ind:number)=>{
@@ -97,6 +103,9 @@ export default function Page() {
             router.push("/");
           }
         };
+    if (loading) {
+            return <Loading/>
+        }    
     return(
         <>
         <div className="container m-auto">

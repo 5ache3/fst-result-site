@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
@@ -21,6 +22,7 @@ export default function Page() {
     const limit=20;
     const params = useParams();
     const filliere=params.filliere;
+    const [loading,setLoading]=useState(true)
     const [response,setResponse]=useState([]);
     const [nb,setNb]=useState(0);
     const [info,setInfo]=useState<matieres[]>();
@@ -29,25 +31,30 @@ export default function Page() {
     const order=searchParams.get('order');
     const page=Number(searchParams.get('page'))||1;
 
-    useEffect(() => {
-        const fetchInfo=async()=>{
-            const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}/info`);
-              const result = await data.json();
-              if(result){
-                setInfo(result);
-                setNb(result[0].nb)
-              }
-        }
-        const fetchData = async () => {
-          const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}?sort=${sort}&order=${order}&page=${page}`);
+    const fetchInfo=async()=>{
+        const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}/info`);
           const result = await data.json();
           if(result){
-              setResponse(result);
-          }
+            setInfo(result);
+            setNb(result[0].nb)
+            setLoading(false)
+        }
+    }
+    const fetchData = async () => {
+        const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}?sort=${sort}&order=${order}&page=${page}`);
+        const result = await data.json();
+        if(result){
+          setLoading(false);
+          setResponse(result);
+      }
 
-          return result;
-        };
+      return result;
+    };
+    useEffect(() => {
         fetchInfo()
+      },[]);
+
+    useEffect(() => {
         fetchData()
       }, [sort,order,page]);
 
@@ -72,12 +79,15 @@ export default function Page() {
         }
         return 'sort-asc'
       }
+    if (loading) {
+    return <Loading/>
+    }
     return(
         <>
         <div className="container m-auto">
             <NavBar filliere={filliere}/>
             <div className="main shadow-xl rounded-lg ">
-                <div className="cards p-3 flex flex-wrap m-auto gap-3  ">
+                <div className="cards p-3 flex flex-wrap m-auto gap-3 text-sm ">
                    {info?.map((mat)=>(
                     <div 
                         className="h-20 py-1 a-fucking-card bg-slate-100 m-auto hover:bg-white border-gray-400 min-w-[47%] text-center rounded-lg shadow-md flex flex-col  font-semibold"
@@ -101,7 +111,7 @@ export default function Page() {
                                 className={`p-3 pr-12 ${sortingColumn('nom')}`}
                                 >nom</Link></th>
                             <th className="text-sm font-semibold text-left">
-                                <Link href={`?sort=moy&order=${ordering('moy_m',1)}&page=1`}
+                                <Link href={`?sort=moy_m&order=${ordering('moy_m',1)}&page=1`}
                                 className={`p-3 ${sortingColumn('moy_m')}`}
                                 >moyenne</Link></th>
                         </tr>

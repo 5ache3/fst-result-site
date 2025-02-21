@@ -1,4 +1,5 @@
 'use client'
+import Loading from '@/components/Loading';
 import NavBar from '@/components/NavBar'
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -15,6 +16,7 @@ type Filliere = {
 };
 
 export default function page() {
+  const [loading,setLoading]=useState(true)
     const [response,setResponse]=useState<matiere[]>([])
     const params = useParams();
     const [fills, setFills] = useState<Filliere[]>([]);
@@ -26,10 +28,16 @@ export default function page() {
           const response = await fetch("/api/fillieres/list");
           const data = await response.json();
           setFills(data);
+          setLoading(false)
         } catch (error) {
           console.error("Failed to fetch fillieres:", error);
         }
       };
+      useEffect(()=>{
+        fetchFillieres()
+        
+      },[])
+
     useEffect(()=>{
         const fetchInfo=async()=>{
             const data = await fetch(`/api/fillieres/${params.filliere}/matieres`);
@@ -39,7 +47,6 @@ export default function page() {
               }
         }
         fetchInfo();
-        fetchFillieres();
     },[params])
 
     const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -48,6 +55,9 @@ export default function page() {
           router.push(`/${selectedValue}/matieres`);
         }
       };
+  if (loading) {
+    return <Loading/>
+  }
   return (
     <>
     <div className='container m-auto'>

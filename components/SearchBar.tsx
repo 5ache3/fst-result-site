@@ -20,7 +20,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   };
 
   return (
-    <div className="flex items-center gap-2 bg-gray-900 rounded-xl shadow-md w-full max-w-md">
+    <div className="flex items-center gap-2 bg-white rounded-xl shadow-md w-full max-w-xs">
       <input
         type="text"
         placeholder="Search..."
