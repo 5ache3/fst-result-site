@@ -61,13 +61,13 @@ export default function page() {
     },[])
     if (loading) {
         return <Loading/>
-      }
+    }
   return (
     <>
     <div  className="container m-auto">
-        <NavBar filliere={info?.fil}/>
-        <div className='main p-2'>
-            <div className='m-auto builtin p-1 max-w-screen-lg bg-slate-200'>
+        <div className='main  max-w-screen-lg p-2'>
+            <NavBar filliere={info?.fil}/>
+            <div className='m-auto builtin p-1 bg-slate-200'>
             <div className='builtin-header pr-3 pl-4'>
                 <table>
                     <tbody>
@@ -116,7 +116,8 @@ export default function page() {
                 </div>
             ))}
             </div>
-            <div className='card mt-2 m-auto max-w-[500px] bg-slate-100 rounded-lg shadow-2xl text-sm font-sans font-semibold p-5'>
+            <div className='card mt-2 m-auto max-w-[500px] bg-slate-100
+             rounded-lg shadow-2xl text-sm font-sans font-semibold p-5'>
                 <div className='elements flex flex-col'>
                         <div>
                             <span className='text-gray-500'> Matricule:</span> {info?.mat}
