@@ -1,6 +1,7 @@
 'use client'
 import Loading from '@/components/Loading'
 import NavBar from '@/components/NavBar'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -31,6 +32,7 @@ type InfoCard={
     d: string,
     moyenne: number
 }
+
 export default function page() {
     const [loading, setLoading] = useState(true);
     const params=useParams();
