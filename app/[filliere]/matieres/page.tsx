@@ -3,7 +3,7 @@ import Loading from '@/components/Loading';
 import NavBar from '@/components/NavBar'
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react'
 
 type matiere={
     n:string

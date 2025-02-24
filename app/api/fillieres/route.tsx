@@ -32,6 +32,8 @@ export async function GET(
         const [response]= await db.query(query,[['S1','S3','S5']]);
         return NextResponse.json(response)
     }catch(error: unknown){
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+        if (error instanceof Error) {
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+        return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });    }
 }
