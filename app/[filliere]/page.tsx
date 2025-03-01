@@ -85,6 +85,9 @@ export default function Page() {
         return'desc'        
       }
       const sortingColumn=(by:string)=>{
+        if(sort==null && by=='moy'){
+            return 'sort-desc';
+          }
         if(sort!=by){
             return ''
         }

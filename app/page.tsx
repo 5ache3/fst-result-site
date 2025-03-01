@@ -83,6 +83,9 @@ export default function Home() {
     return'desc'        
   }
   const sortingColumn=(by:string)=>{
+    if(sort==null && by=='moy'){
+      return 'sort-desc';
+    }
     if(sort!=by){
         return ''
     }
@@ -132,7 +135,7 @@ export default function Home() {
                     </thead>
                     <tbody>
                     {response.map((value:PersonResult, index:number) => (
-                        <tr key={index} className="bg-gray-50 border-b-2 border-gray-200">
+                        <tr key={value.mat} className="bg-gray-50 border-b-2 border-gray-200">
                         <td className="p-3 text-sm text-gray-700 font-semibold">{(page-1)*limit+index + 1}</td>
                         <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className='hover:underline hover:text-blue-400'>{value.mat}</Link></td>
                         <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className='hover:underline hover:text-blue-400'>{value.nom}</Link></td>
