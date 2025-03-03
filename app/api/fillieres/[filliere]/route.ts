@@ -28,7 +28,7 @@ export async function GET(
         const query=`SELECT S.matricule mat,E.name nom,moyenne moy FROM semestres S
                     INNER JOIN etudiants E ON 
                         E.matricule=S.matricule
-                    WHERE S.fil=? AND semestre IN (?) ORDER BY ${sort} ${order} LIMIT ${start},${limit}`;
+                    WHERE S.fil=? AND semestre IN (?) ORDER BY ${sort} ${order}`;
         const [response]= await db.query(query,[filliere,['S1','S3','S5']]);
         return NextResponse.json(response)
     }catch(error: unknown){

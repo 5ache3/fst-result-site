@@ -120,7 +120,7 @@ export default function Page() {
                     value={filliere}  
                     className="p-3 my-5 w-64 border border-gray-600 bg-slate-200 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     >
-                    <option value="">ALL</option>
+                    <option value="">ALL({fills.length})</option>
                     {fills.map((fil) => (
                         <option key={fil.l}  value={fil.l}>
                         {fil.L}

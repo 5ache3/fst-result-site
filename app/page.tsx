@@ -105,7 +105,7 @@ export default function Home() {
               onChange={handleChange}
               className="p-3 my-5 w-64 border border-gray-600 bg-slate-200 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
-              <option value="">ALL</option>
+              <option value="">ALL({fills.length})</option>
               {fills.map((fil) => (
                 <option key={fil.l} value={fil.l}>
                   {fil.L}
@@ -117,17 +117,17 @@ export default function Home() {
           <table className="result-table text-md w-full shadow-xl border-collapse">
                     <thead className="bg-gray-50 border-b-2 border-gray-200 rounded-lg">
                         <tr className=" table-row">
-                            <th className="p-3 text-sm font-semibold text-left">Nb</th>
+                            <th className="p-2 text-sm font-semibold text-left">Nb</th>
                             <th className="text-sm font-semibold text-left" >
                                 <Link href={`?sort=mat&order=${ordering('mat',0)}&page=1`}
-                                className={`p-3 ${sortingColumn('mat')}`}
+                                className={`p-3 px-0 ${sortingColumn('mat')}`}
                                 >matricule</Link></th>
                             <th className="text-sm font-semibold text-left">
                                 <Link href={`?sort=nom&order=${ordering('nom',0)}&page=1`}
                                 className={`p-3 pr-12 ${sortingColumn('nom')}`}
                                 >nom</Link></th>
-                            <th className="p-3 text-sm font-semibold text-left">Filliere</th>
-                            <th className="text-sm font-semibold text-left">
+                            <th className="p-3 text-xs font-semibold text-left">Filliere</th>
+                            <th className="text-xs font-semibold text-left">
                                 <Link href={`?sort=moy&order=${ordering('moy',1)}&page=1`}
                                 className={` ${sortingColumn('moy')}`}
                                 >moyenne</Link></th>
@@ -136,11 +136,11 @@ export default function Home() {
                     <tbody>
                     {response.map((value:PersonResult, index:number) => (
                         <tr key={value.mat} className="bg-gray-50 border-b-2 border-gray-200">
-                        <td className="p-3 text-sm text-gray-700 font-semibold">{(page-1)*limit+index + 1}</td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className='hover:underline hover:text-blue-400'>{value.mat}</Link></td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className='hover:underline hover:text-blue-400'>{value.nom}</Link></td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold"><Link href={`/${value.filliere}`} className='hover:underline hover:text-blue-400'>{value.filliere}</Link></td>
-                        <td className="p-3 text-sm text-gray-700 font-semibold">{value.moy}</td>
+                        <td className="p-2 text-sm text-gray-700 font-semibold">{(page-1)*limit+index + 1}</td>
+                        <td className="p-2 text-xs text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className='hover:underline hover:text-blue-400'>{value.mat}</Link></td>
+                        <td className="p-2 text-xs text-gray-700 font-semibold"><Link href={`/student/${value.mat}`} className='hover:underline hover:text-blue-400'>{value.nom}</Link></td>
+                        <td className="p-2 text-xs text-gray-700 font-semibold"><Link href={`/${value.filliere}`} className='hover:underline hover:text-blue-400'>{value.filliere}</Link></td>
+                        <td className="p-2 text-xs text-gray-700 font-semibold">{value.moy}</td>
                         </tr>
                     )) || []}
                     </tbody>
