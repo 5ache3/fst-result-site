@@ -93,7 +93,7 @@ export default function Page() {
                 <div className="cards p-3 flex flex-wrap m-auto gap-3 text-sm ">
                    {info?.map((mat)=>(
                     <div 
-                        className="h-20 py-1 a-fucking-card bg-slate-100 m-auto hover:bg-white border-gray-400 min-w-[47%] text-center rounded-lg shadow-md flex flex-col  font-semibold"
+                        className="h-20 py-1 a-fucking-card text-black bg-slate-50 m-auto hover:bg-white border-gray-400 min-w-[47%] text-center rounded-lg shadow-md flex flex-col  font-semibold"
                         key={mat.id}>
                         <Link href={`/${filliere}/matieres/${mat.id}`}
                         className=" hover:text-blue-400"
@@ -130,7 +130,7 @@ export default function Page() {
                     )) || []}
                     </tbody>
                 </table>
-                <div className="pagination text-sm mt-3 shadow-xl rounded-md ">
+                <div className="pagination text-black text-sm mt-3 shadow-xl rounded-md ">
                   <div className="p-3 text-lg font-semibold text-center text-gray-400">
                       Page <span className="text-black">{page} </span>
                        OF <span className="text-black">{Math.ceil(nb/limit)}</span>

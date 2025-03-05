@@ -75,7 +75,7 @@ export default function page() {
               ))}
             </select>
           </div>
-          <div className='flex flex-col bg-slate-100 '>
+          <div className='flex flex-col text-black bg-slate-100 '>
             {(()=>{
                 const card:ReactNode[]=[];
                 if(response){

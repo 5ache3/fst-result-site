@@ -158,7 +158,7 @@ export default function Page() {
                     </tbody>
                 </table>
                 
-                <div className="pagination text-sm mt-3 shadow-xl rounded-md ">
+                <div className="pagination text-black text-sm mt-3 shadow-xl rounded-md ">
                   <div className="p-3 text-lg font-semibold text-center text-gray-400">
                       Page <span className="text-black">{page} </span>
                        OF <span className="text-black">{Math.ceil(nb/limit)}</span>

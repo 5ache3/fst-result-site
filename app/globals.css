@@ -60,6 +60,9 @@ body {
   height: 80px;
 
 }
+body{
+  background-color: #ffffff;
+}
 tr:first-child th:first-child{
   border-top-left-radius: 10px;
 }

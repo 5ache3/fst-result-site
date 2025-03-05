@@ -77,7 +77,7 @@ export default function page() {
               ))}
             </select>
           </div>
-          <div className='flex flex-col'>
+          <div className='flex flex-col text-black'>
             {(()=>{
                 const card:ReactNode[]=[];
                 if(response){
@@ -88,7 +88,7 @@ export default function page() {
                           href={`/${params.filliere}/modules/${item.m}`}
                           className='hover:text-blue-400'
                           >{item.m}</Link>
-                        <Link className='bg-slate-50 hover:text-blue-400' href={`/${params.filliere}/matieres/${item.id}`} 
+                        <Link className=' hover:text-blue-400' href={`/${params.filliere}/matieres/${item.id}`} 
                           key={item.id}
                           >{item.n}
                         </Link>
