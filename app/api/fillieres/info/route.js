@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
     try{
         const db = await createConnection()
-        const query="SELECT count(*) nb FROM etudiants";
+        const query="SELECT count(*) nb FROM semestres";
         const [response]= await db.query(query);
         return NextResponse.json(response)
     }catch(error){
