@@ -39,28 +39,31 @@ export default function page() {
     const [matiereRes,setMatiereRes]=useState<MatiereData[]>([])
     const [moduleRes,setModuleRes]=useState<ModuleData[]>([])
     const [info,setInfo]=useState<InfoCard>()
-    useEffect(()=>{
-        const fetchInfo = async ()=>{
-            const data = await fetch(`/api/person/${params.id}/info`);
-            const result = await data.json();
-            if(result){
-                setInfo(result[0]);
-                setLoading(false)
-            }
-
-        };
-        const fetchData = async ()=>{
-            const data = await fetch(`/api/person/${params.id}`);
-            const result = await data.json();
-            if(result){
-                setLoading(false)
-                setMatiereRes(result[0]);
-                setModuleRes(result[1]);
-            }
+    
+    const fetchInfo = async ()=>{
+        const data = await fetch(`/api/person/${params.id}/info`);
+        const result = await data.json();
+        if(result){
+            setInfo(result[0]);
+            setLoading(false)
         }
+
+    };
+    const fetchData = async ()=>{
+        const data = await fetch(`/api/person/${params.id}`);
+        const result = await data.json();
+        if(result){
+            setLoading(false)
+            setMatiereRes(result[0]);
+            setModuleRes(result[1]);
+        }
+    }
+
+    useEffect(()=>{
         fetchInfo()
         fetchData()
     },[])
+    
     if (loading) {
         return <Loading/>
     }
