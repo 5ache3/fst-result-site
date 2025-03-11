@@ -3,10 +3,10 @@ import SearchBar from './SearchBar'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-export default function NavBar({filliere}) {
+export default function NavBar({filliere}:{filliere:string}) {
   const [isOpen, setIsOpen] = useState(false);
   
-  const path = filliere ? filliere:'';
+  const path = filliere ? filliere:'ALL';
   return (
     <nav className='bg-black text-white w-full shadow-lg rounded-sm md:rounded-lg'>
       <div className='flex justify-between items-center p-4 max-w-7xl mx-auto'>
