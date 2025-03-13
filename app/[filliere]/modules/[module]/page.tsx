@@ -59,7 +59,7 @@ export default function Page() {
       }, [sort,order,page]);
 
       const ordering=(by:string,ind:number)=>{
-        if(sort==by&&order=='desc'){
+        if((sort==null || sort=='null') && order=='desc'){
             return 'asc'
         }
         if(sort==by&&order=='asc'){

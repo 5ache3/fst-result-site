@@ -79,7 +79,7 @@ export default function Page() {
         return'desc'        
       }
       const sortingColumn=(by:string)=>{
-        if(sort==null && by=='nf'){
+        if((sort==null || sort=='null')&& by=='nf'){
             return 'sort-desc';
           }
         if(sort!=by){

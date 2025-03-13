@@ -3,7 +3,7 @@ import SearchBar from './SearchBar'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-export default function NavBar({filliere}:{filliere:string}) {
+export default function NavBar({filliere}:{filliere:string|undefined|string[]}) {
   const [isOpen, setIsOpen] = useState(false);
   
   const path = filliere ? filliere:'ALL';
