@@ -29,7 +29,7 @@ export async function GET(
                     INNER JOIN etudiants E ON 
                         E.matricule=S.matricule
                     WHERE semestre IN (?) ORDER BY ${sort} ${order} LIMIT ${start},${limit}`;
-        const [response]= await db.query(query,[['S1','S3','S5']]);
+        const [response]= await db.query(query,[JSON.parse(process.env.NEXT_PUBLIC_SEMESTRES || '[]')]);
         return NextResponse.json(response)
     }catch(error: unknown){
         if (error instanceof Error) {

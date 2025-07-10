@@ -9,7 +9,7 @@ export async function GET(req,{ params }) {
                     INNER JOIN etudiants e ON 
                         e.matricule=s.matricule
                     WHERE s.matricule=? AND semestre IN(?)`;
-        const [response]= await db.query(query,[id,['S1','S3','S5']]);
+        const [response]= await db.query(query,[id,JSON.parse(process.env.NEXT_PUBLIC_SEMESTRES || '[]')]);
 
         
         return NextResponse.json(response)

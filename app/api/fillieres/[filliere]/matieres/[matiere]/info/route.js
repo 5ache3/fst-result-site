@@ -10,7 +10,7 @@ export async function GET(req, { params }) {
                     count(decision) nb from matieres
                     WHERE (name =? OR id=?) and matieres.fil =? and semestre IN (?) GROUP BY n,id`;
                     
-        const [response]= await db.query(query,[matiere,matiere,filliere,['S1','S3','S5']]);
+        const [response]= await db.query(query,[matiere,matiere,filliere,JSON.parse(process.env.NEXT_PUBLIC_SEMESTRES || '[]')]);
         return NextResponse.json(response)
     }catch(error){
         return NextResponse.json({ error: error.message }, { status: 500 });

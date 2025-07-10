@@ -30,7 +30,7 @@ export async function GET(
                         ON etudiants.matricule=modules.matricule
                     WHERE module =? and modules.fil =? and semestre IN (?) ORDER BY ${sort} ${order}
                         LIMIT ${start},${limit}`;
-        const [response]= await db.query(query,[module,filliere,['S1','S3','S5']]);
+        const [response]= await db.query(query,[module,filliere,JSON.parse(process.env.NEXT_PUBLIC_SEMESTRES || '[]')]);
         return NextResponse.json(response)
     }catch(error){
         if (error instanceof Error) {

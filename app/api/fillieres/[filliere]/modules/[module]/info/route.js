@@ -9,7 +9,7 @@ export async function GET(req, { params }) {
                     INNER JOIN matieres ma ON 
                             ma.module=m.module 
                     WHERE m.module =? and m.fil =? and m.semestre IN (?) GROUP BY name,id`;
-        const [response]= await db.query(query,[module,filliere,['S1','S3','S5']]);
+        const [response]= await db.query(query,[module,filliere,JSON.parse(process.env.NEXT_PUBLIC_SEMESTRES || '[]')]);
         return NextResponse.json(response)
     }catch(error){
         return NextResponse.json({ error: error.message }, { status: 500 });
