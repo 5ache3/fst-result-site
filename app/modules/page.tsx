@@ -1,9 +1,6 @@
-"use client";
 
+import Selection from "@/components/CustumSelect";
 import NavBar from "@/components/NavBar";
-import { useEffect, useState, ChangeEvent } from "react";
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import Link from "next/link";
 
 type Filliere = {
   L: string;
@@ -11,48 +8,35 @@ type Filliere = {
 };
 
 
-export default function Home() {
-  const [fills, setFills] = useState<Filliere[]>([]);
-  
-  const router = useRouter();
+export default async function Home() {
 
   const fetchFillieres = async () => {
     try {
-      const response = await fetch("/api/fillieres/list");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/list`);
       const data = await response.json();
-      setFills(data);
+      return data;
     } catch (error) {
       console.error("Failed to fetch fillieres:", error);
     }
   };
 
-  useEffect(() => {
-    fetchFillieres();
-  }, []);
-
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    if (selectedValue) {
-      router.push(`/${selectedValue}/modules`);
-    }
-  };
-
+  
+  const fills:Filliere[] = await fetchFillieres();
+  
   return (
     <>
       <div className="container m-auto">
         <NavBar filliere={''}/>
         <div className="main shadow-xl rounded-lg p-3 ">
-          <div className="flex justify-around">
-            <select
-              onChange={handleChange}
-              className="p-3 my-5 w-64 border border-gray-600 bg-slate-200 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              {fills.map((fil) => (
-                <option key={fil.l} value={fil.l}>
-                  {fil.L}
-                </option>
-              ))}
-            </select>
+          <div className="flex justify-around my-5">
+            {(() => {
+              const fil_options = fills.map(({ L, l }) => ({
+                val: l,
+                text: L,
+              }));
+
+              return <Selection items={fil_options} path="" value="" />;
+            })()}
           </div>
           
         </div>

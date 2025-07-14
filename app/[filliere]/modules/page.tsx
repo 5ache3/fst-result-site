@@ -1,9 +1,8 @@
 'use client'
-import Loading from '@/components/Loading';
+import Selection from '@/components/CustumSelect';
 import NavBar from '@/components/NavBar'
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react'
+import {ReactNode} from 'react'
 
 type modules={
     m:string;
@@ -14,67 +13,49 @@ type Filliere = {
   l: string;
 }
 
-export default function page() {
-    const [response,setResponse]=useState<modules[]>([])
-    const params = useParams();
-    const [loading,setLoading]=useState(true)
-    const [fills, setFills] = useState<Filliere[]>([]);
-    const router = useRouter();
+export default async function page({params}: {params: { filliere: string }}) {
+  const {filliere} = params;
+  let response:modules[]=[]
+  let fills:Filliere[]=[]
 
     const fetchFillieres = async () => {
       try {
         const response = await fetch("/api/fillieres/list");
         const data = await response.json();
-        setFills(data);
-        setLoading(false)
+        fills=data
       } catch (error) {
         console.error("Failed to fetch fillieres:", error);
       }
     };
-    useEffect(()=>{
-      fetchFillieres()
-    },[])
-    
-    useEffect(()=>{
-        const fetchInfo=async()=>{
-            const data = await fetch(`/api/fillieres/${params.filliere}/modules`);
-              const result = await data.json();
-              if(result){
-                setResponse(result);
-                setLoading(false)
-              }
-        }
-        fetchInfo()
-    },[params])
 
-    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-      const selectedValue = event.target.value;
-      if (selectedValue) {
-        router.push(`/${selectedValue}/modules`);
-      }
-    };
-    if (loading) {
-      return <Loading/>
+  const fetchInfo=async()=>{
+    const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/${filliere}/modules`);
+    const result = await data.json();
+    if(result){
+      response=result;
     }
+  }
+  await fetchFillieres();
+  await fetchInfo()
+  
+  
   return (
     <>
     <div className='container m-auto'>
-        <NavBar filliere={params.filliere}/>
+        <NavBar filliere={filliere}/>
+
         <div className="main shadow-xl rounded-lg p-3 ">
-          <div className="flex justify-around">
-            <select
-              onChange={handleChange}
-              value={params.filliere}
-              className="p-3 my-5 w-64 border border-gray-600 bg-slate-200 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value=''>All</option>
-              {fills.map((fil) => (
-                <option key={fil.l} value={fil.l}>
-                  {fil.L}
-                </option>
-              ))}
-            </select>
+          <div className="flex justify-around my-5">
+              {(() => {
+                  const fil_options = fills.map(({ L, l }) => ({
+                      val: l,
+                      text: L,
+                  }));
+
+                  return <Selection items={fil_options} path="" value={filliere} />;
+              })()}
           </div>
+
           <div className='flex flex-col text-black bg-slate-100 '>
             {(()=>{
                 const card:ReactNode[]=[];

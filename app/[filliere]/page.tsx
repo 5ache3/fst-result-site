@@ -1,10 +1,7 @@
-"use client";
 
-import Loading from "@/components/Loading";
+import Selection from "@/components/CustumSelect";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState,ChangeEvent } from "react";
 type PersonResult={
     mat:string,
     nom:string,
@@ -20,57 +17,47 @@ type Filliere = {
     l: string;
 };
 
-export default function Page() {
+export default async function Page({params,searchParams,}: {params: { filliere: string };  searchParams: { [key: string]: string | undefined };}) {
+  const sort = searchParams.sort;
+  const order = searchParams.order;
+  const page = Number(searchParams.page ?? 1);
+  const limit=Number(process.env.NEXT_PUBLIC_QUERY_LIMIT||20);
 
-    const limit=20;
-    const params = useParams();
-    const filliere=params.filliere;
-    const [response,setResponse]=useState([]);
-    // const [info,setInfo]=useState([]);
-    const [loading,setLoading]=useState(true)
-    const [nb,setNb]=useState(0);
-    const searchParams=useSearchParams();
-    const sort=searchParams.get('sort');
-    const order=searchParams.get('order');
-    const page=Number(searchParams.get('page'))||1;
-    const [fills, setFills] = useState<Filliere[]>([]);
-    
-    const router = useRouter();
-    
+    const {filliere}= params;
+    let response:PersonResult[]=[]
+    let nb =0;
+    let fills:Filliere[]=[]
     const fetchFillieres = async () => {
         try {
-          const response = await fetch("/api/fillieres/list");
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/list`);
           const data = await response.json();
-          setFills(data);
+          fills=data;
+
         } catch (error) {
           console.error("Failed to fetch fillieres:", error);
         }
       };
 
       const fetchInfo=async()=>{
-          const data = await fetch(`/api/fillieres/${params.filliere}/info`);
+          const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/${filliere}/info`);
             const result = await data.json();
             if(result){
               //   setInfo(result[0]);
-                setNb(result[0].nb)
+              nb=result[0].nb
             }
       }
       const fetchData = async () => {
-        const data = await fetch(`/api/fillieres/${params.filliere}?sort=${sort}&order=${order}&page=${page}`);
+        const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/${filliere}?sort=${sort}&order=${order}&page=${page}`);
         const result = await data.json();
         if(result){
-            setResponse(result);
-            setLoading(false);
+            response=result;
         }
         return result;
       };
-    useEffect(()=>{
-        fetchFillieres()
-        fetchInfo()
-    },[])
-    useEffect(() => {
-        fetchData()
-      }, [sort,order,page]);
+
+    await fetchFillieres()
+    await fetchInfo()
+    await fetchData()
 
       const ordering=(by:string,ind:number)=>{
         if(sort==by&&order=='desc'){
@@ -84,6 +71,7 @@ export default function Page() {
         }
         return'desc'        
       }
+
       const sortingColumn=(by:string)=>{
         if((sort==null || sort=='null')&& by=='moy'){
             return 'sort-desc';
@@ -96,37 +84,21 @@ export default function Page() {
         }
         return 'sort-asc'
       }
-        const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        
-        const selectedValue = event.target.value;
-        
-        if (selectedValue) {
-            router.push(`/${selectedValue}`);
-        }else{
-            router.push("/");
-          }
-        };
-    if (loading) {
-            return <Loading/>
-        }    
+            
     return(
         <>
         <div className="container m-auto">
             <NavBar filliere={filliere}/>
             <div className="main shadow-xl rounded-lg p-3 ">
-                <div className="flex justify-around">
-                    <select
-                    onChange={handleChange}
-                    value={filliere}  
-                    className="p-3 my-5 w-64 border border-gray-600 bg-slate-200 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    >
-                    <option value="">ALL({fills.length})</option>
-                    {fills.map((fil) => (
-                        <option key={fil.L}  value={fil.l}>
-                        {fil.L}
-                        </option>
-                    ))}
-                    </select>
+                <div className="flex justify-around my-5">
+                    {(() => {
+                        const fil_options = fills.map(({ L, l }) => ({
+                            val: l,
+                            text: L,
+                        }));
+
+                        return <Selection items={fil_options} path="" value={filliere} />;
+                        })()}
                 </div>
                 <table className="result-table w-full shadow-xl border-collapse">
                     <thead className="bg-gray-50 border-b-2 border-gray-200 rounded-lg">
