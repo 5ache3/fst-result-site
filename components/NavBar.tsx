@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react'
 import SearchBar from './SearchBar'
 import Link from 'next/link'

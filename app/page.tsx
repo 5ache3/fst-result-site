@@ -1,9 +1,7 @@
-"use client";
 
 import NavBar from "@/components/NavBar";
-import { useEffect, useState, ChangeEvent } from "react";
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from "next/link";
+import Selection from "@/components/CustumSelect";
 
 type Filliere = {
   L: string;
@@ -17,58 +15,48 @@ type PersonResult={
   moy:number
 }
 
-export default function Home() {
-  const limit=20;
-  const params = useParams();
-  const filliere=params.filliere;
-  const [response,setResponse]=useState([]);
-  // const [info,setInfo]=useState([]);
-  const [nb,setNb]=useState(0);
-  const searchParams=useSearchParams();
-  const sort=searchParams.get('sort');
-  const order=searchParams.get('order');
-  const page=Number(searchParams.get('page'))||1;
-  const [fills, setFills] = useState<Filliere[]>([]);
-  
-  const router = useRouter();
+export default async function Home({params,searchParams,}: {params: { serie: string };  searchParams: { [key: string]: string | undefined };}) {
+  const sort = searchParams.sort;
+  const order = searchParams.order;
+  const page = Number(searchParams.page ?? 1);
+  const limit=Number(process.env.NEXT_PUBLIC_QUERY_LIMIT||20);
+  let fills:Filliere[]=[] 
+  let nb = 0;
+  let response:PersonResult[]=[]
+
+  const fetchInfo=async()=>{
+      const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/info`);
+        const result = await data.json();
+        if(result){
+            nb=result[0].nb
+        }
+  }
 
   const fetchFillieres = async () => {
     try {
-      const response = await fetch("/api/fillieres/list");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/list`);
       const data = await response.json();
-      setFills(data);
+      fills=data;
     } catch (error) {
       console.error("Failed to fetch fillieres:", error);
     }
   };
-  const fetchInfo=async()=>{
-    const data = await fetch(`/api/fillieres/info`);
-      const result = await data.json();
-      if(result){
-          setNb(result[0].nb)
-      }
-  }
+  
+
   const fetchData = async () => {
-    const data = await fetch(`/api/fillieres?sort=${sort}&order=${order}&page=${page}`);
+    const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres?sort=${sort}&order=${order}&page=${page}`);
     const result = await data.json();
     if(result){
-        setResponse(result);
+        response=result;
     }
     return result;
   };
 
-  useEffect(() => {
-    fetchFillieres();
-    fetchData();
-    fetchInfo();
-  }, [sort,order,page]);
+  await fetchFillieres();
+  await fetchData();
+  await fetchInfo();
 
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    if (selectedValue) {
-      router.push(`/${selectedValue}`);
-    }
-  };
+  
 
   const ordering=(by:string,ind:number)=>{
     if(sort==by&&order=='desc'){
@@ -95,23 +83,18 @@ export default function Home() {
     return 'sort-asc'
   }
 
+  const fil_options = fills.map(({ L,l, }) => ({
+      val:  l,
+      text: L,
+    }));
+
   return (
     <>
       <div className="container m-auto">
         <NavBar filliere={''}/>
         <div className="main shadow-xl rounded-lg p-3 ">
           <div className="flex justify-around">
-            <select
-              onChange={handleChange}
-              className="p-3 my-5 w-64 border border-gray-600 bg-slate-200 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">ALL({fills.length})</option>
-              {fills.map((fil) => (
-                <option key={fil.L} value={fil.l}>
-                  {fil.L}
-                </option>
-              ))}
-            </select>
+            <Selection items={fil_options} path="/" value=""/>
           </div>
           
           <table className="result-table text-md w-full shadow-xl border-collapse">
