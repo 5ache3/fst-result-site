@@ -63,7 +63,7 @@ export default async function page({params}: {params: { filliere: string }}) {
                 response.map(item=>{
                     card.push(
                       <div className='p-2 bg-slate-50 text-lg border-gray-10 border-b-2' key={item.m}>
-                        <Link className='hover:text-blue-400' href={`/${params.filliere}/modules/${item.m}`} key={item.m}>{item.m}
+                        <Link className='hover:text-blue-400' href={`/${filliere}/modules/${item.m}`} key={item.m}>{item.m}
                         </Link>
                       </div>
                   )})}

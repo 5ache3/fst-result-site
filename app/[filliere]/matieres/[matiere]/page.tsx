@@ -1,10 +1,5 @@
-"use client";
-
-import Loading from "@/components/Loading";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 type PersonResult={
     mat:string,
@@ -15,88 +10,70 @@ type PersonResult={
     nf:number
     mo:number
 }
-type InfoCard={
-    n:string
-    id:string
-    moy_d:number
-    moy_e:number
-    moy_f:number
-    moy_t:number
-    nb:number
-}
 
-export default function Page() {
-    const limit=20;
-    const params = useParams();
-    const [loading,setLoading]=useState(true)
-    const [response,setResponse]=useState<PersonResult[]>([]);
-    const [info,setInfo]=useState<InfoCard>();
-    const [nb,setNb]=useState(0);
-    const [tp,setTp]=useState(0);
-    const searchParams=useSearchParams();
-    const sort=searchParams.get('sort');
-    const order=searchParams.get('order');
-    const page=Number(searchParams.get('page'))||1;
+export default async function Page({params,searchParams}: {params: { filliere: string,matiere:string },  searchParams: { [key: string]: string | undefined }}) {
+  const {filliere,matiere} = params;
+  const sort = searchParams.sort;
+  const order = searchParams.order;
+  const page = Number(searchParams.page ?? 1);
+  const limit=Number(process.env.NEXT_PUBLIC_QUERY_LIMIT||20);
 
+    let response:PersonResult[]=[]
+
+    let nb = 0;
+    let tp=0;
     const fetchInfo=async()=>{
-        const data = await fetch(`/api/fillieres/${params.filliere}/matieres/${params.matiere}/info`);
+        const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/${filliere}/matieres/${matiere}/info`);
           const result = await data.json();
           if(result){
-              setInfo(result[0]);
-              setNb(result[0].nb)
-              setTp(result[0].moy_t)
-              setLoading(false)
+          //   setInfo(result[0]);
+              nb=result[0].nb
+              tp=result[0].moy_t
           }
     }
+
     const fetchData = async () => {
-      const data = await fetch(`/api/fillieres/${params.filliere}/matieres/${params.matiere}?sort=${sort}&order=${order}&page=${page}`);
+      const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/${filliere}/matieres/${matiere}?sort=${sort}&order=${order}&page=${page}`);
       const result = await data.json();
       if(result){
-          setResponse(result);
-          setLoading(false)
+          response=result;
       }
       return result;
     };
 
-    useEffect(()=>{
-        fetchInfo()
-    },[])
-
-    useEffect(() => {
-        fetchData()
-      }, [sort,order,page]);
-
-      const ordering=(by:string,ind:number)=>{
-        if(sort==by&&order=='desc'){
-            return 'asc'
-        }
-        if(sort==by&&order=='asc'){
-            return 'desc'
-        }
-        if(ind==0){
-            return'asc'
-        }
-        return'desc'        
-      }
-      const sortingColumn=(by:string)=>{
-        if((sort==null || sort=='null')&& by=='nf'){
-            return 'sort-desc';
-          }
-        if(sort!=by){
-            return ''
-        }
-        if(order=='desc'){
-            return 'sort-desc'
-        }
-        return 'sort-asc'
-      }
-    if (loading) {
-    return <Loading/>
+    const ordering=(by:string,ind:number)=>{
+    if(sort==by&&order=='desc'){
+        return 'asc'
     }
+    if(sort==by&&order=='asc'){
+        return 'desc'
+    }
+    if(ind==0){
+        return'asc'
+    }
+    return'desc'        
+    }
+    const sortingColumn=(by:string)=>{
+    if((sort==null || sort=='null')&& by=='nf'){
+        return 'sort-desc';
+        }
+    if(sort!=by){
+        return ''
+    }
+    if(order=='desc'){
+        return 'sort-desc'
+    }
+    return 'sort-asc'
+    }
+    
+    await fetchInfo();
+    await fetchData();
+    
+    
     return(
         <>
         <div className="container m-auto">
-            <NavBar filliere={params.filliere}/>
+            <NavBar filliere={filliere}/>
             <div className="main shadow-xl rounded-lg p-3 px-1 ">
                 <table className="matieres-table result-table w-full shadow-xl border-collapse">
                     <thead className="bg-gray-50 border-b-2 border-gray-200 rounded-lg">

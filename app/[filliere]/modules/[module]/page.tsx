@@ -3,8 +3,6 @@
 import Loading from "@/components/Loading";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 type PersonResult={
     mat:string,
@@ -18,73 +16,62 @@ type matieres={
     moy:number
     nb:number
 }
-export default function Page() {
-    const limit=20;
-    const params = useParams();
-    const filliere=params.filliere;
-    const [loading,setLoading]=useState(true)
-    const [response,setResponse]=useState([]);
-    const [nb,setNb]=useState(0);
-    const [info,setInfo]=useState<matieres[]>();
-    const searchParams=useSearchParams();
-    const sort=searchParams.get('sort');
-    const order=searchParams.get('order');
-    const page=Number(searchParams.get('page'))||1;
+export default async function Page({params,searchParams}: {params: { filliere: string,module:string },  searchParams: { [key: string]: string | undefined }}) {
+  const {filliere,module} = params;
+  const sort = searchParams.sort;
+  const order = searchParams.order;
+  const page = Number(searchParams.page ?? 1);
+  const limit=Number(process.env.NEXT_PUBLIC_QUERY_LIMIT||20);
 
+    let response:PersonResult[] = [];
+    let nb = 0;
+    let info:matieres[]=[]
     const fetchInfo=async()=>{
-        const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}/info`);
+        const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/${filliere}/modules/${module}/info`);
           const result = await data.json();
           if(result){
-            setInfo(result);
-            setNb(result[0].nb)
-            setLoading(false)
+            info=result;
+            nb=result[0].nb
         }
     }
     const fetchData = async () => {
-        const data = await fetch(`/api/fillieres/${params.filliere}/modules/${params.module}?sort=${sort}&order=${order}&page=${page}`);
+        const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/${filliere}/modules/${module}?sort=${sort}&order=${order}&page=${page}`);
         const result = await data.json();
         if(result){
-          setLoading(false);
-          setResponse(result);
+            response=result;
       }
 
       return result;
     };
-    useEffect(() => {
-        fetchInfo()
-      },[]);
 
-    useEffect(() => {
-        fetchData()
-      }, [sort,order,page]);
-
-      const ordering=(by:string,ind:number)=>{
-        if((sort==null || sort=='null') && order=='desc'){
-            return 'asc'
-        }
-        if(sort==by&&order=='asc'){
-            return 'desc'
-        }
-        if(ind==0){
-            return'asc'
-        }
-        return'desc'        
+    const ordering=(by:string,ind:number)=>{
+      if((sort==null || sort=='null') && order=='desc'){
+          return 'asc'
       }
-      const sortingColumn=(by:string)=>{
-        if(sort==null && by=='moy_m'){
-            return 'sort-desc';
-          }
-        if(sort!=by){
-            return ''
-        }
-        if(order=='desc'){
-            return 'sort-desc'
-        }
-        return 'sort-asc'
+      if(sort==by&&order=='asc'){
+          return 'desc'
       }
-    if (loading) {
-    return <Loading/>
+      if(ind==0){
+          return'asc'
+      }
+      return'desc'        
     }
+    const sortingColumn=(by:string)=>{
+      if(sort==null && by=='moy_m'){
+          return 'sort-desc';
+        }
+      if(sort!=by){
+          return ''
+      }
+      if(order=='desc'){
+          return 'sort-desc'
+      }
+      return 'sort-asc'
+    }
+
+    await fetchInfo()
+    await fetchData()
+
     return(
         <>
         <div className="container m-auto">
