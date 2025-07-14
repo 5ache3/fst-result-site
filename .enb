@@ -1,0 +1,5 @@
+HOST = "localhost"
+USER = "root"
+PASSWORD =
+DATABASE = ""
+NEXT_PUBLIC_SEMESTRES = '["S2","S4","S6"]'
