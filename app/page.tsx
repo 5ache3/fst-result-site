@@ -93,8 +93,8 @@ export default async function Home({params,searchParams,}: {params: { serie: str
       <div className="container m-auto">
         <NavBar filliere={''}/>
         <div className="main shadow-xl rounded-lg p-3 ">
-          <div className="flex justify-around">
-            <Selection items={fil_options} path="/" value=""/>
+          <div className="flex justify-around my-5">
+            <Selection items={fil_options} path="" value=""/>
           </div>
           
           <table className="result-table text-md w-full shadow-xl border-collapse">

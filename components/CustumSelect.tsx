@@ -7,7 +7,7 @@ export default function Selection({items,path,value}:{items:{val:string,text:str
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-        router.push(`/${path}/${encodeURIComponent(value)}`);
+        router.push(`${path}/${encodeURIComponent(value)}`);
     };
     return (
     <select 

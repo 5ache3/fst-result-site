@@ -1,10 +1,5 @@
-'use client'
-import Loading from '@/components/Loading'
 import NavBar from '@/components/NavBar'
-import { Metadata } from 'next'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
 
 type MatiereData={
     mat_n: string
@@ -33,62 +28,58 @@ type InfoCard={
     moyenne: number
 }
 
-export default function page() {
-    const [loading, setLoading] = useState(true);
-    const params=useParams();
-    const [matiereRes,setMatiereRes]=useState<MatiereData[]>([])
-    const [moduleRes,setModuleRes]=useState<ModuleData[]>([])
-    const [info,setInfo]=useState<InfoCard>()
+export default async function page({params}:{params: { id: string }}) {
     
+    let matiereRes:MatiereData[]=[];
+    let moduleRes:ModuleData[]=[];
+    
+    const {id} = await params;
     const fetchInfo = async ()=>{
-        const data = await fetch(`/api/person/${params.id}/info`);
+        const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/person/${id}/info`);
         const result = await data.json();
         if(result){
-            setInfo(result[0]);
-            setLoading(false)
+            return result[0];
         }
 
     };
     const fetchData = async ()=>{
-        const data = await fetch(`/api/person/${params.id}`);
+        const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/person/${id}`);
         const result = await data.json();
         if(result){
-            setLoading(false)
-            setMatiereRes(result[0]);
-            setModuleRes(result[1]);
+            matiereRes=result[0];
+            moduleRes=result[1];
         }
     }
 
-    useEffect(()=>{
-        fetchInfo()
-        fetchData()
-    },[])
-    
-    if (loading) {
-        return <Loading/>
+    const info:InfoCard = await fetchInfo();
+    await fetchData()
+    if(!info){
+        return <div>eror</div>
     }
   return (
     <>
     <div  className="container m-auto">
         <div className='main m-auto max-w-screen-lg p-2'>
-            <NavBar filliere={info?.fil}/>
+            <NavBar filliere={info.fil}/>
             <div className='card mb-2 mt-2 m-auto max-w-[500px] bg-slate-100
              rounded-lg shadow-2xl text-sm font-sans font-semibold p-5'>
                 <div className='elements flex flex-col text-black'>
+                    {info&&(
                         <div>
-                            <span className='text-gray-500'> Matricule:</span> {info?.mat}
+                            <span className='text-gray-500'> Matricule:</span> {info.mat}
+                        </div>
+                    )}
+                        <div>
+                            <span className='text-gray-500'> Nom:</span> {info.name}
                         </div>
                         <div>
-                            <span className='text-gray-500'> Nom:</span> {info?.name}
+                            <span className='text-gray-500'> Filliere:</span><Link href={`/${info.fil}`} className='hover:underline hover:text-blue-400'>{info?.filliere}</Link> 
                         </div>
                         <div>
-                            <span className='text-gray-500'> Filliere:</span><Link href={`/${info?.fil}`} className='hover:underline hover:text-blue-400'>{info?.filliere}</Link> 
+                            <span className='text-gray-500'> Moyenne:</span> {info.moyenne}
                         </div>
                         <div>
-                            <span className='text-gray-500'> Moyenne:</span> {info?.moyenne}
-                        </div>
-                        <div>
-                            <span className='text-gray-500'> Observation:</span> {info?.d}
+                            <span className='text-gray-500'> Observation:</span> {info.d}
                         </div>
                 </div>
             </div>
