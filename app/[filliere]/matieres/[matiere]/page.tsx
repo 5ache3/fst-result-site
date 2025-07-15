@@ -11,12 +11,13 @@ type PersonResult={
     mo:number
 }
 
-export default async function Page({params,searchParams}: {params: { filliere: string,matiere:string },  searchParams: { [key: string]: string | undefined }}) {
-  const {filliere,matiere} = params;
-  const sort = searchParams.sort;
-  const order = searchParams.order;
-  const page = Number(searchParams.page ?? 1);
+export default async function Page({params,searchParams}: {params: { filliere: string,matiere:string },searchParams:Promise<{ [key: string]: string | undefined }>}) {
+  const resolvedParams = await searchParams;
+  const sort = await resolvedParams.sort;
+  const order = await resolvedParams.order;
+  const page = Number( await resolvedParams.page ?? 1);
   const limit=Number(process.env.NEXT_PUBLIC_QUERY_LIMIT||20);
+    const {filliere,matiere} = params;
 
     let response:PersonResult[]=[]
 

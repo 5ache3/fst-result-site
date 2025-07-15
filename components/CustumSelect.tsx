@@ -2,12 +2,18 @@
 import React from 'react'
 import { useRouter } from 'next/navigation';
 
-export default function Selection({items,path,value}:{items:{val:string,text:string}[],path:string,value:string}) {
+export default function Selection({items,path,value,sufix}:{items:{val:string,text:string}[],path:string,value:string,sufix?:string}) {
     const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-        router.push(`${path}/${encodeURIComponent(value)}`);
+        let url;
+        if(sufix){
+            url=`${path}/${encodeURIComponent(value)}/${sufix}`
+        }else{
+            url=`${path}/${encodeURIComponent(value)}`
+        }
+        router.push(url);
     };
     return (
     <select 

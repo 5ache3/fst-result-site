@@ -1,9 +1,5 @@
-"use client";
 
 import NavBar from "@/components/NavBar";
-import { useEffect, useState, ChangeEvent } from "react";
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import Link from "next/link";
 import Selection from "@/components/CustumSelect";
 
 type Filliere = {

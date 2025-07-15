@@ -1,4 +1,4 @@
-'use client'
+
 import Selection from '@/components/CustumSelect';
 import NavBar from '@/components/NavBar'
 import Link from 'next/link';
@@ -14,19 +14,19 @@ type Filliere = {
 }
 
 export default async function page({params}: {params: { filliere: string }}) {
-  const {filliere} = params;
+  const {filliere} = await params;
   let response:modules[]=[]
   let fills:Filliere[]=[]
 
-    const fetchFillieres = async () => {
-      try {
-        const response = await fetch("/api/fillieres/list");
-        const data = await response.json();
-        fills=data
-      } catch (error) {
-        console.error("Failed to fetch fillieres:", error);
-      }
-    };
+  const fetchFillieres = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/list`);
+      const data = await response.json();
+      fills=data
+    } catch (error) {
+      console.error("Failed to fetch fillieres:", error);
+    }
+  };
 
   const fetchInfo=async()=>{
     const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fillieres/${filliere}/modules`);
@@ -52,7 +52,7 @@ export default async function page({params}: {params: { filliere: string }}) {
                       text: L,
                   }));
 
-                  return <Selection items={fil_options} path="" value={filliere} />;
+                  return <Selection items={fil_options} path="" value={filliere} sufix='modules' />;
               })()}
           </div>
 
